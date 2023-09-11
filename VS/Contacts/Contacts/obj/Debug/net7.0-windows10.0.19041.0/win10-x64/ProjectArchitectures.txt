@@ -1,0 +1,1 @@
+C:\Users\jonfa\OneDrive\Documents\GitHub\App-Dev\VS\Contacts\Contacts\Contacts.csproj;x64
