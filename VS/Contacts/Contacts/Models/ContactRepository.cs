@@ -19,7 +19,34 @@ namespace Contacts.Models
 
 		public static Contact GetContactById(int contactId)
 		{
-			return _contacts.FirstOrDefault(x => x.ContactId == contactId);
+			var contact = _contacts.FirstOrDefault(x => x.ContactId == contactId);
+			if (contact != null)
+			{
+				return new Contact
+				{
+					ContactId = contactId,
+					Address = contact.Address,
+					Email = contact.Email,
+					Name = contact.Name,
+					PoneNumber = contact.PoneNumber
+				};
+			}
+
+			return null;
+		}
+
+		public static void UpdateContact(int contactId, Contact contact)
+		{
+			if (contactId != contact.ContactId) return;
+
+			var ContactToUpdate = _contacts.FirstOrDefault(x => x.ContactId == contactId);
+			if (ContactToUpdate != null)
+			{
+				ContactToUpdate.Address = contact.Address;
+				ContactToUpdate.PoneNumber = contact.PoneNumber;
+				ContactToUpdate.Email = contact.Email;
+
+			}
 		}
 	}
 }
