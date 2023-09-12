@@ -10,6 +10,9 @@ namespace ContactTutTest.Models
 {
 	public static class ContactRepository
 	{
-		
+		static Contacts contactsData = new Contacts() 
+		{
+			
+		};
 	}
 }

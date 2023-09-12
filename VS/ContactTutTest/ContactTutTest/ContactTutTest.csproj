@@ -53,10 +53,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Models\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <MauiXaml Update="Views\ContactDetails.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
