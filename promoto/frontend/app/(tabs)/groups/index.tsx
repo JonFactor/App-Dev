@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import { Link } from "expo-router";
-import GroupTypes from "../../components/cards/GroupTypes";
+import GroupTypes from "../../../components/cards/GroupTypes";
 
 const GroupsPage = () => {
   const groupTypeList = [
