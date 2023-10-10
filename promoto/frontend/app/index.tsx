@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 import "../app.d.ts";
 
 const StartPage = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(1);
 
   if (isLoggedIn === 1) {
     return <Redirect href={"/home"} />;

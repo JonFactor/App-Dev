@@ -8,8 +8,9 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { Button } from "react-native-elements";
+import { Redirect } from "expo-router";
 
-const LoginForm = () => {
+const LoginForm = (displayBackBtn) => {
   const [displayPassword, setDisplayPassword] = useState(true);
 
   const handleDisplayPassword = () => {
@@ -18,6 +19,10 @@ const LoginForm = () => {
     } else {
       setDisplayPassword(true);
     }
+  };
+
+  const handleBackBtnClick = () => {
+    Redirect(require("../../(tabs)/home/index.tsx"));
   };
 
   const handleLoginSubmit = () => {};
@@ -55,6 +60,15 @@ const LoginForm = () => {
       >
         <Text className="text-white font-semibold text-lg">Submit</Text>
       </TouchableOpacity>
+
+      {displayBackBtn && (
+        <TouchableOpacity
+          onPress={handleBackBtnClick}
+          className="w-20 h-8 mt-4 rounded-md bg-gray-700 text-white items-center"
+        >
+          <Text className="p-2 text-white">Back</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
