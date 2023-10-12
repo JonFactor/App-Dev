@@ -7,7 +7,7 @@ import BelowNavContent from './components/BelowNavContent';
 export default function App() {
   
   return (
-    <View className>
+    <View className={"p-14 mt-8 items-center flex-auto"}>
       <AlarmBtn></AlarmBtn>
       <NavDiv></NavDiv>
       <BelowNavContent></BelowNavContent>
