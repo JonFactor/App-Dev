@@ -1,16 +1,23 @@
 import { Redirect } from "expo-router";
-import { useState } from "react";
-import { StyleSheet } from "react-native";
+import { useContext, useState } from "react";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import "../app.d.ts";
+import { AuthContext } from "../context/AuthContext.tsx";
 
 const StartPage = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(1);
+  const { isLoading, userToken } = useContext(AuthContext);
 
-  if (isLoggedIn === 1) {
-    return <Redirect href={"/home"} />;
-  } else {
-    return <Redirect href={"/login"} />;
+  if (isLoading) {
+    <View className=" flex-1 justify-items-center align-middle">
+      <ActivityIndicator size={"large"} />
+    </View>;
   }
+
+  return userToken === null ? (
+    <Redirect href={"/login"} />
+  ) : (
+    <Redirect href={"/home"} />
+  );
 };
 
 export default StartPage;
