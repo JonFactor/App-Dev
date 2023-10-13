@@ -8,9 +8,11 @@ const StartPage = () => {
   const { isLoading, userToken } = useContext(AuthContext);
 
   if (isLoading) {
-    <View className=" flex-1 justify-items-center align-middle">
-      <ActivityIndicator size={"large"} />
-    </View>;
+    return (
+      <View className=" flex-1 justify-items-center align-middle">
+        <ActivityIndicator size={"large"} />
+      </View>
+    );
   }
 
   return userToken === null ? (

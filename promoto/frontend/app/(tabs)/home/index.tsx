@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React, { useEffect, useState } from "react";
-import { Link } from "expo-router";
+import React, { useEffect, useReducer, useState } from "react";
+import { Link, useRouter } from "expo-router";
 import { Image } from "expo-image";
 import { LinearTextGradient } from "react-native-text-gradient";
 import { LinearGradient } from "expo-linear-gradient";
@@ -18,6 +18,8 @@ const home = () => {
     "Theater",
     "Hobby",
   ];
+
+  const router = useRouter();
 
   const handleFilterBtnPress = (index: number) => {
     if (!currentFilter.includes(filterTypes[index])) {
@@ -72,6 +74,13 @@ const home = () => {
           </TouchableOpacity>
         ))}
       </ScrollView>
+      <TouchableOpacity
+        onPress={() => {
+          router.replace("/login");
+        }}
+      >
+        <Text>Login</Text>
+      </TouchableOpacity>
     </View>
   );
 };
