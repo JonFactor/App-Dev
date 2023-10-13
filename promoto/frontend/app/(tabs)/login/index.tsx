@@ -11,6 +11,33 @@ import { AuthContext } from "../../../context/AuthContext";
 const LoginPage = () => {
   const { login } = useContext(AuthContext);
 
+  const [userEmail, setUserEmail] = useState("");
+  const [userPassword, setUserPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  const validateUserEntry = () => {
+    if (!userEmail.includes("@") || userEmail.indexOf(" ") > -1) {
+      setEmailError("invalid Email");
+    } else if (userEmail.length < 1) {
+      setEmailError("Email feild is required");
+    } else {
+      setEmailError("");
+    }
+    if (userPassword.length < 8) {
+      setPasswordError("password must be longer than 7");
+    } else if (userPassword.indexOf(" ") > -1) {
+      setPasswordError("password must not include spaces");
+    } else {
+      setPasswordError("");
+    }
+
+    if (passwordError === "" && emailError === "") {
+      return true;
+    }
+    return false;
+  };
+
   const [displayPassword, setDisplayPassword] = useState(true);
   const eyeRoutes = [
     require("../../../assets/login/eye.svg"),
@@ -30,21 +57,31 @@ const LoginPage = () => {
   useEffect(() => {}, [displayPassword]);
 
   const handleSignInclick = () => {
-    login();
+    const isValid = validateUserEntry();
+    if (!isValid) {
+      return;
+    }
+
+    login("werwerwerwrwrwrqtr");
     router.replace("/home");
   };
 
-  const handleSignUpClick = () => {};
+  const handleSignUpClick = () => {
+    router.replace("/register");
+  };
 
   return (
     <View className="mt-20">
       <View className=" p-4 ">
-        <View className="flex items-center w-full mt-8">
+        <View className="flex items-center w-full mt-10">
           <Text className=" text-light-blue text-4xl font-semibold ">
             Communivo
           </Text>
         </View>
-        <View className=" mt-20 flex items-center">
+        <View className=" mt-16 flex items-center">
+          <Text className="text-red-200 text-lg font-bold   ">
+            {emailError}
+          </Text>
           <View className=" flex-row space-x-4 mb-1">
             <View className=" w-9 h-12 flex">
               <Image
@@ -55,36 +92,45 @@ const LoginPage = () => {
             </View>
             <TextInput
               className="w-72 h-12 text-3xl"
-              placeholder="Username"
+              placeholder="Email"
+              onChangeText={(text) => setUserEmail(text)}
+              value={userEmail}
             ></TextInput>
           </View>
-          <View className=" w-full h-1 bg-md-blue" />
+          <View className=" w-full h-1 bg-md-blue " />
 
-          <View className=" flex-row space-x-4 mb-1 mt-12">
-            <View className=" w-10 h-11 flex">
-              <Image
-                source={require("../../../assets/login/lock.svg")}
-                contentFit="cover"
-                className=" flex-1"
-              />
+          <View className=" mt-8">
+            <Text className=" text-red-200 text-lg font-bold">
+              {passwordError}
+            </Text>
+            <View className=" flex-row space-x-4 mb-1">
+              <View className=" w-10 h-11 flex">
+                <Image
+                  source={require("../../../assets/login/lock.svg")}
+                  contentFit="cover"
+                  className=" flex-1"
+                />
+              </View>
+              <TextInput
+                className=" w-56 h-12 text-3xl"
+                placeholder="Password"
+                secureTextEntry={displayPassword}
+                onChangeText={(text) => setUserPassword(text)}
+                value={userPassword}
+              ></TextInput>
+              <TouchableOpacity
+                className=" w-10 h-6 mt-5 flex"
+                onPress={() => {
+                  setDisplayPassword(true);
+                }}
+              >
+                <Image
+                  source={displayPassword ? eyeRoutes[1] : eyeRoutes[0]}
+                  contentFit="cover"
+                  className=" flex-1"
+                />
+              </TouchableOpacity>
             </View>
-            <TextInput
-              className=" w-56 h-12 text-3xl"
-              placeholder="Password"
-              secureTextEntry={displayPassword}
-            ></TextInput>
-            <TouchableOpacity
-              className=" w-10 h-6 mt-5 flex"
-              onPress={() => {
-                setDisplayPassword(true);
-              }}
-            >
-              <Image
-                source={displayPassword ? eyeRoutes[1] : eyeRoutes[0]}
-                contentFit="cover"
-                className=" flex-1"
-              />
-            </TouchableOpacity>
           </View>
           <View className=" w-full h-1 bg-md-blue" />
           <View className=" items-end w-full">

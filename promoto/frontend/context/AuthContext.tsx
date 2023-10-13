@@ -7,9 +7,9 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userToken, setUserToken] = useState(null);
 
-  const login = () => {
+  const login = (userToken: string) => {
     setIsLoading(true);
-    setUserToken("utiowpetu");
+    setUserToken(userToken);
     AsyncStorage.setItem("userToken", "5437345wttrewterwt");
     setIsLoading(false);
   };
