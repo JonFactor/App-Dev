@@ -29,17 +29,17 @@ export default () => {
         }}
       />
       <Tabs.Screen
-        name="notifications"
-        options={{
-          tabBarIcon: () =>
-            logoSetting(require("../../assets/navbarIcons/notifications.png")),
-        }}
-      />
-      <Tabs.Screen
         name="profile"
         options={{
           tabBarIcon: () =>
             logoSetting(require("../../assets/navbarIcons/profile.png")),
+        }}
+      />
+      <Tabs.Screen
+        name="login"
+        options={{
+          tabBarStyle: { display: "none" },
+          href: null,
         }}
       />
     </Tabs>

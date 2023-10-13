@@ -1,11 +1,13 @@
 import { Stack } from "expo-router";
+import { AuthContext, AuthProvider } from "../context/AuthContext";
 
 const StackLayout = () => {
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="(pages)" options={{ headerShown: false }} />
-    </Stack>
+    <AuthProvider>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
+    </AuthProvider>
   );
 };
 
