@@ -1,11 +1,11 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React, { useEffect, useReducer, useState } from "react";
+import React, { createContext, useEffect, useReducer, useState } from "react";
 import { Link, useRouter } from "expo-router";
 import { Image } from "expo-image";
-import { LinearTextGradient } from "react-native-text-gradient";
-import { LinearGradient } from "expo-linear-gradient";
 import { ScrollView } from "react-native-gesture-handler";
-import EventCard from "../../../components/cards/EventCard";
+import Events from "../../../components/collections/Events";
+
+export const FilterContext = createContext(null);
 
 const home = () => {
   const [userName, setUserName] = useState("Jon");
@@ -24,12 +24,14 @@ const home = () => {
 
   const handleFilterBtnPress = (index: number) => {
     if (!currentFilter.includes(filterTypes[index])) {
-      currentFilter.push(filterTypes[index]);
+      setCurrentFilter((currentFilter) => [
+        ...currentFilter,
+        filterTypes[index],
+      ]);
     } else {
       let i = filterTypes.indexOf(filterTypes[index]);
-      currentFilter.splice(i, 1);
+      setCurrentFilter(currentFilter.filter((value) => value === i));
     }
-    console.log(currentFilter);
   };
   return (
     <View className=" mt-12 mx-4 flex">
@@ -52,40 +54,37 @@ const home = () => {
       <ScrollView
         horizontal
         indicatorStyle="white"
-        className=" flex-row mt-6 mx-2 space-x-4"
+        className=" flex-row mx-2 space-x-4 mt-24 absolute"
       >
         <TouchableOpacity
-          className=" w-12 aspect-square rounded-full bg-md-purple p-2"
+          className={` w-10 aspect-square rounded-full items-center ${
+            currentFilter.length < 1
+              ? "bg-md-purple"
+              : "border-2 border-solid border-black"
+          }`}
           onPress={() => setCurrentFilter([])}
         >
-          <Text className=" text-xl font-semibold"> All </Text>
+          <Text className=" text-lg p-1 font-semibold"> All </Text>
         </TouchableOpacity>
         {filterTypes.map((value: string, index: number, array: string[]) => (
           <TouchableOpacity
-            className={` px-4 border-gray-500 border-solid border-2 rounded-full
+            className={` px-3 rounded-full
               items-center ${
-                currentFilter.includes(filterTypes[index]) && "bg-md-blue"
+                currentFilter.includes(filterTypes[index])
+                  ? "bg-md-blue"
+                  : "border-gray-500 border-solid border-2"
               }`}
             key={index}
             onPress={() => {
               handleFilterBtnPress(index);
             }}
           >
-            <Text className=" mt-2 text-lg">{value}</Text>
+            <Text className=" mt-1 text-lg">{value}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <View className=" mt-12">
-        <ScrollView>
-          <EventCard
-            title={"test"}
-            url={"1"}
-            day={"13"}
-            month={"oct"}
-            location={"my house"}
-            imagePath={require("../../../assets/placeholders/jon-vroman.png")}
-          />
-        </ScrollView>
+      <View className=" mt-16">
+        <Events filters={currentFilter} />
       </View>
     </View>
   );

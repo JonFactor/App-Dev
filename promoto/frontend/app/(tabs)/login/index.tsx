@@ -21,13 +21,19 @@ const LoginPage = () => {
     const minPasswordLength = 8;
     const allowedPasswordAttempts = 5;
 
+    const { back } = useRouter();
+
+    let emailErrored = true;
     if (!userEmail.includes("@") || userEmail.indexOf(" ") > -1) {
       setEmailError("invalid Email");
     } else if (userEmail.length < 1) {
       setEmailError("Email feild is required");
     } else {
+      emailErrored = false;
       setEmailError("");
     }
+
+    let passwordErrorer = true;
     if (userPassword.length < minPasswordLength) {
       setPasswordError("password must be longer than 7");
     } else if (userPassword.indexOf(" ") > -1) {
@@ -35,16 +41,18 @@ const LoginPage = () => {
     } else if (passwordAttempts >= allowedPasswordAttempts) {
       setPasswordError("too many password attempts, please try again later");
     } else {
+      passwordErrorer = false;
       setPasswordError("");
     }
 
-    if (passwordError === "" && emailError === "") {
+    if (!passwordErrorer && !emailErrored) {
       return true;
     }
     return false;
   };
 
   const [displayPassword, setDisplayPassword] = useState(true);
+  const [activeEyeIndex, setActiveEyeIndex] = useState(0);
   const eyeRoutes = [
     require("../../../assets/login/eye.svg"),
     require("../../../assets/login/eyeclosed.svg"),
@@ -62,7 +70,7 @@ const LoginPage = () => {
 
   useEffect(() => {}, [displayPassword]);
 
-  const handleSignInclick = async () => {
+  const handleSignInclick = () => {
     const isValid = validateUserEntry();
     if (!isValid) {
       return;
@@ -81,7 +89,7 @@ const LoginPage = () => {
     // }
 
     login("werwerwerwrwrwrqtr");
-    router.replace("/home");
+    router.back();
   };
 
   const handleSignUpClick = () => {
@@ -139,11 +147,17 @@ const LoginPage = () => {
               <TouchableOpacity
                 className=" w-10 h-6 mt-5 flex"
                 onPress={() => {
-                  setDisplayPassword(true);
+                  if (!displayPassword) {
+                    setDisplayPassword(true);
+                    setActiveEyeIndex(1);
+                  } else {
+                    setDisplayPassword(false);
+                    setActiveEyeIndex(0);
+                  }
                 }}
               >
                 <Image
-                  source={displayPassword ? eyeRoutes[1] : eyeRoutes[0]}
+                  source={eyeRoutes[activeEyeIndex]}
                   contentFit="cover"
                   className=" flex-1"
                 />

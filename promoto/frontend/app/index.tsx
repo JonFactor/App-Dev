@@ -1,4 +1,4 @@
-import { Redirect } from "expo-router";
+import { Redirect, Stack } from "expo-router";
 import { useContext, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import "../app.d.ts";
@@ -15,10 +15,14 @@ const StartPage = () => {
     );
   }
 
-  return userToken === null ? (
-    <Redirect href={"/login"} />
-  ) : (
-    <Redirect href={"/home"} />
+  return (
+    <View>
+      {userToken === null ? (
+        <Redirect href={"/login"} />
+      ) : (
+        <Redirect href={"/home"} />
+      )}
+    </View>
   );
 };
 
