@@ -4,7 +4,8 @@ module.exports = {
   "./app/(tabs)/**/*.{js,jsx,ts,tsx}", 
   "./app/components/**/*.{js,jsx,ts,tsx}",
   "./app/(tabs)/home/index.tsx",
-  "./app/(tabs)/login/index.tsx"
+  "./app/(tabs)/login/index.tsx",
+  "./components/**/*.{js,jsx,ts,tsx}",
 ],
   theme: {
     extend: {

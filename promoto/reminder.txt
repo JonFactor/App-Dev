@@ -1,0 +1,12 @@
+backend
+cd backend
+python3 -m venv
+pip3 install -r requ.txt
+cd backend
+python3 manage.py runserver
+
+frontend
+cd frontend
+npm i
+npx expo
+i
