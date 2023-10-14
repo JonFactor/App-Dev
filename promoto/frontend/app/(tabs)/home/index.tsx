@@ -5,6 +5,7 @@ import { Image } from "expo-image";
 import { LinearTextGradient } from "react-native-text-gradient";
 import { LinearGradient } from "expo-linear-gradient";
 import { ScrollView } from "react-native-gesture-handler";
+import EventCard from "../../../components/cards/EventCard";
 
 const home = () => {
   const [userName, setUserName] = useState("Jon");
@@ -74,13 +75,18 @@ const home = () => {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <TouchableOpacity
-        onPress={() => {
-          router.replace("/login");
-        }}
-      >
-        <Text>Login</Text>
-      </TouchableOpacity>
+      <View className=" mt-12">
+        <ScrollView>
+          <EventCard
+            title={"test"}
+            url={"1"}
+            day={"13"}
+            month={"oct"}
+            location={"my house"}
+            imagePath={require("../../../assets/placeholders/jon-vroman.png")}
+          />
+        </ScrollView>
+      </View>
     </View>
   );
 };

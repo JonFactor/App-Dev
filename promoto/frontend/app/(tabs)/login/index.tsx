@@ -15,8 +15,12 @@ const LoginPage = () => {
   const [userPassword, setUserPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [passwordAttempts, setPasswordAttempts] = useState(0);
 
   const validateUserEntry = () => {
+    const minPasswordLength = 8;
+    const allowedPasswordAttempts = 5;
+
     if (!userEmail.includes("@") || userEmail.indexOf(" ") > -1) {
       setEmailError("invalid Email");
     } else if (userEmail.length < 1) {
@@ -24,10 +28,12 @@ const LoginPage = () => {
     } else {
       setEmailError("");
     }
-    if (userPassword.length < 8) {
+    if (userPassword.length < minPasswordLength) {
       setPasswordError("password must be longer than 7");
     } else if (userPassword.indexOf(" ") > -1) {
       setPasswordError("password must not include spaces");
+    } else if (passwordAttempts >= allowedPasswordAttempts) {
+      setPasswordError("too many password attempts, please try again later");
     } else {
       setPasswordError("");
     }
@@ -56,11 +62,23 @@ const LoginPage = () => {
 
   useEffect(() => {}, [displayPassword]);
 
-  const handleSignInclick = () => {
+  const handleSignInclick = async () => {
     const isValid = validateUserEntry();
     if (!isValid) {
       return;
     }
+
+    // const user = await requestFindUser();
+    // if (user === null) {
+    //   setEmailError("Email not found");
+    //   return;
+    // }
+    // if (user.data.auth === false) {
+    //   setPasswordError("Incorrect Password");
+    //   setPasswordAttempts(passwordAttempts + 1);
+
+    //   return;
+    // }
 
     login("werwerwerwrwrwrqtr");
     router.replace("/home");

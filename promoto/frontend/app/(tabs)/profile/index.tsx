@@ -19,6 +19,13 @@ const profile = () => {
       >
         <Text>logout</Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          router.replace("/login");
+        }}
+      >
+        <Text>Login</Text>
+      </TouchableOpacity>
     </View>
   );
 };
