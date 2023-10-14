@@ -42,6 +42,20 @@ export default () => {
           href: null,
         }}
       />
+      <Tabs.Screen
+        name="events"
+        options={{
+          tabBarStyle: { display: "none" },
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="register"
+        options={{
+          tabBarStyle: { display: "none" },
+          href: null,
+        }}
+      />
     </Tabs>
   );
 };

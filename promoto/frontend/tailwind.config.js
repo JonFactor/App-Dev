@@ -6,6 +6,8 @@ module.exports = {
   "./app/(tabs)/home/index.tsx",
   "./app/(tabs)/login/index.tsx",
   "./components/**/*.{js,jsx,ts,tsx}",
+  "./app/(tabs)/events/[id].tsx",
+  "./app/(tabs)/register/index.tsx"
 ],
   theme: {
     extend: {
