@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import GetUser from "../functions/GetUser";
 
 export const AuthContext = createContext(null);
 
@@ -32,12 +33,25 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(false);
   };
 
+  const getUserInfo = async () => {
+    const userToken = await AsyncStorage.getItem("userToken");
+    const response = await GetUser(userToken);
+    if (response.status !== 200) {
+      // console.log(response.status);
+      return;
+    }
+    const content = await response.json();
+    return content;
+  };
+
   useEffect(() => {
     isLoggedIn();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ login, logout, isLoading, userToken }}>
+    <AuthContext.Provider
+      value={{ login, logout, isLoading, userToken, getUserInfo }}
+    >
       {children}
     </AuthContext.Provider>
   );

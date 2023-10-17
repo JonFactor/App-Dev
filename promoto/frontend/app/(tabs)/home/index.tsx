@@ -1,15 +1,25 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React, { createContext, useEffect, useReducer, useState } from "react";
-import { Link, useRouter } from "expo-router";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
+import { Link, Redirect, useRouter } from "expo-router";
 import { Image } from "expo-image";
 import { ScrollView } from "react-native-gesture-handler";
 import Events from "../../../components/collections/Events";
+import GetUser from "../../../functions/GetUser";
+import { AuthContext } from "../../../context/AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const FilterContext = createContext(null);
 
 const home = () => {
   const [userName, setUserName] = useState("Jon");
   const [currentFilter, setCurrentFilter] = useState([]);
+  const { login } = useContext(AuthContext);
   const filterTypes = [
     "Sports",
     "Gaming",
@@ -19,6 +29,17 @@ const home = () => {
     "Theater",
     "Hobby",
   ];
+
+  useEffect(() => {
+    const setUser = async () => {
+      const response = await GetUser();
+      const content = await response.json();
+
+      setUserName(content.name);
+    };
+
+    setUser();
+  }, []);
 
   const router = useRouter();
 
@@ -33,6 +54,11 @@ const home = () => {
       setCurrentFilter(currentFilter.filter((value) => value === i));
     }
   };
+
+  const handleNewEventClick = () => {
+    router.replace("events");
+  };
+
   return (
     <View className=" mt-12 mx-4 flex">
       <View className=" flex-row mx-4 ">
@@ -84,8 +110,14 @@ const home = () => {
         ))}
       </ScrollView>
       <View className=" mt-16">
-        <Events filters={currentFilter} />
+        <Events filters={currentFilter} noFilter={false} />
       </View>
+      <TouchableOpacity
+        className=" w-14 aspect-square rounded-full bg-md-purple absolute mt-[650px]"
+        onPress={handleNewEventClick}
+      >
+        <Text className=" text-4xl font-semibold px-4 mt-2">+</Text>
+      </TouchableOpacity>
     </View>
   );
 };

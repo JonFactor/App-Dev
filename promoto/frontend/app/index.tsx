@@ -15,6 +15,8 @@ const StartPage = () => {
     );
   }
 
+  console.log(userToken);
+
   return (
     <View>
       {userToken === null ? (

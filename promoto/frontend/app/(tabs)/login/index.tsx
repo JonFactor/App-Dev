@@ -7,6 +7,8 @@ import { Redirect, router, useRouter } from "expo-router";
 import { useFonts } from "expo-font";
 import { Image } from "expo-image";
 import { AuthContext } from "../../../context/AuthContext";
+import response from "../../../functions/Login";
+import Login from "../../../functions/Login";
 
 const LoginPage = () => {
   const { login } = useContext(AuthContext);
@@ -18,7 +20,6 @@ const LoginPage = () => {
   const [passwordAttempts, setPasswordAttempts] = useState(0);
 
   const validateUserEntry = () => {
-    const minPasswordLength = 8;
     const allowedPasswordAttempts = 5;
 
     const { back } = useRouter();
@@ -34,9 +35,7 @@ const LoginPage = () => {
     }
 
     let passwordErrorer = true;
-    if (userPassword.length < minPasswordLength) {
-      setPasswordError("password must be longer than 7");
-    } else if (userPassword.indexOf(" ") > -1) {
+    if (userPassword.indexOf(" ") > -1) {
       setPasswordError("password must not include spaces");
     } else if (passwordAttempts >= allowedPasswordAttempts) {
       setPasswordError("too many password attempts, please try again later");
@@ -60,35 +59,27 @@ const LoginPage = () => {
 
   const router = useRouter();
 
-  const handleDisplayPassword = () => {
-    if (displayPassword) {
-      setDisplayPassword(false);
-    } else {
-      setDisplayPassword(true);
-    }
-  };
-
   useEffect(() => {}, [displayPassword]);
 
-  const handleSignInclick = () => {
+  const handleSignInclick = async () => {
     const isValid = validateUserEntry();
     if (!isValid) {
       return;
     }
 
-    // const user = await requestFindUser();
-    // if (user === null) {
-    //   setEmailError("Email not found");
-    //   return;
-    // }
-    // if (user.data.auth === false) {
-    //   setPasswordError("Incorrect Password");
-    //   setPasswordAttempts(passwordAttempts + 1);
+    const email = userEmail;
+    const password = userPassword;
 
-    //   return;
-    // }
+    const response = await Login({ email, password });
 
-    login("werwerwerwrwrwrqtr");
+    if (response.status !== 200) {
+      setEmailError("Authoritization Failed");
+      return;
+    }
+
+    const cookie = response.headers.map["set-cookie"];
+
+    login(cookie);
     router.back();
   };
 
@@ -98,6 +89,7 @@ const LoginPage = () => {
 
   return (
     <View className="mt-20">
+      <Redirect href={"home"} />
       <View className=" p-4 ">
         <View className="flex items-center w-full mt-10">
           <Text className=" text-light-blue text-4xl font-semibold ">

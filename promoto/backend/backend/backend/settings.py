@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,7 +40,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "corsheaders",
-    "users"
+    "users",
+    "events"
 ]
 
 MIDDLEWARE = [
@@ -128,7 +130,13 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# set user model
 AUTH_USER_MODEL = 'users.User'
 
+# allow backend to be accessed everywhere w/ cookies 
 CORS_ORIGN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+
+# set paths to images
+MEDIA_URL = "/media/"
+MEDIA_ROOT=os.path.join(BASE_DIR,"media/")

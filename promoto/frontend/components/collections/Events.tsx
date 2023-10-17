@@ -3,10 +3,13 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import EventCard from "../cards/EventCard";
 import { FilterContext } from "../../app/(tabs)/home";
 
-const Events = (filters) => {
+const Events = (filters, noFilter: boolean) => {
   // pull events from db
 
-  filters = filters["filters"];
+  if (!filters === null) {
+    filters = filters["filters"];
+  }
+
   const EventsTemp = [
     {
       title: "jons barmitsfa party",
@@ -32,6 +35,9 @@ const Events = (filters) => {
   //const [filtersState, setFiltersState] = useState([]);
   //setFiltersState(filters);
   const handleIsFiltered = (eventType: string) => {
+    if (noFilter) {
+      return true;
+    }
     const nameMatch = filters.map((value, index) => {
       if (value.toUpperCase() === eventType.toUpperCase()) {
         return true;
