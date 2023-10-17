@@ -89,7 +89,6 @@ const LoginPage = () => {
 
   return (
     <View className="mt-20">
-      <Redirect href={"home"} />
       <View className=" p-4 ">
         <View className="flex items-center w-full mt-10">
           <Text className=" text-light-blue text-4xl font-semibold ">

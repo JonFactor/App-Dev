@@ -13,50 +13,45 @@ import Events from "../../../components/collections/Events";
 import GetUser from "../../../functions/GetUser";
 import { AuthContext } from "../../../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import groupTypes from "../../../constants/groupTypes";
+import SetCookies from "../../../functions/SetCookies";
 
 export const FilterContext = createContext(null);
 
 const home = () => {
-  const [userName, setUserName] = useState("Jon");
+  const [userName, setUserName] = useState("");
   const [currentFilter, setCurrentFilter] = useState([]);
-  const { login } = useContext(AuthContext);
-  const filterTypes = [
-    "Sports",
-    "Gaming",
-    "Party",
-    "Bar",
-    "Music",
-    "Theater",
-    "Hobby",
-  ];
+  const { login, getUserInfo } = useContext(AuthContext);
 
   useEffect(() => {
-    const setUser = async () => {
-      const response = await GetUser();
-      const content = await response.json();
+    const setCookies = async () => {};
 
-      setUserName(content.name);
+    const setUser = async () => {
+      const name = await getUserInfo();
+
+      setUserName(name);
     };
 
+    setCookies();
     setUser();
   }, []);
 
   const router = useRouter();
 
   const handleFilterBtnPress = (index: number) => {
-    if (!currentFilter.includes(filterTypes[index])) {
+    if (!currentFilter.includes(groupTypes[index])) {
       setCurrentFilter((currentFilter) => [
         ...currentFilter,
-        filterTypes[index],
+        groupTypes[index],
       ]);
     } else {
-      let i = filterTypes.indexOf(filterTypes[index]);
+      let i = groupTypes.indexOf(groupTypes[index]);
       setCurrentFilter(currentFilter.filter((value) => value === i));
     }
   };
 
   const handleNewEventClick = () => {
-    router.replace("events");
+    router.push("events");
   };
 
   return (
@@ -92,11 +87,11 @@ const home = () => {
         >
           <Text className=" text-lg p-1 font-semibold"> All </Text>
         </TouchableOpacity>
-        {filterTypes.map((value: string, index: number, array: string[]) => (
+        {groupTypes.map((value: string, index: number, array: string[]) => (
           <TouchableOpacity
             className={` px-3 rounded-full
               items-center ${
-                currentFilter.includes(filterTypes[index])
+                currentFilter.includes(groupTypes[index])
                   ? "bg-md-blue"
                   : "border-gray-500 border-solid border-2"
               }`}

@@ -9,15 +9,20 @@ const EventCard = ({
   month,
   day,
   title,
-  imagePath,
+  // imagePath,
   eventType,
   id,
 }) => {
+  if (eventType === null) {
+    eventType = "misc";
+  }
   const [cardOpacity, setCardOpacity] = useState(100);
   const router = useRouter();
   const handleNavToEvent = () => {
     router.push(`events/${id}`);
   };
+
+  const imagePath = require("../../assets/placeholders/NextEventCover.png");
 
   const handleDislikeEvent = () => {
     // post pref event type -.01 + remove from feed

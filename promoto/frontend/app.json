@@ -1,6 +1,6 @@
 {
   "expo": {
-    "scheme": "acme",
+    "scheme": "mycoolredirect",
     "web": {
       "bundler": "metro"
     },
@@ -26,6 +26,12 @@
       "eas": {
         "projectId": "2aa2f461-1c74-40ae-837c-3ce2dcda86c6"
       }
+    },
+    "android": {
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.anonymous.frontend"
     }
   }
 }

@@ -2,6 +2,7 @@ import { View, Text, ScrollView } from "react-native";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import EventCard from "../cards/EventCard";
 import { FilterContext } from "../../app/(tabs)/home";
+import GetEvents from "../../functions/GetEvents";
 
 const Events = (filters, noFilter: boolean) => {
   // pull events from db
@@ -9,27 +10,18 @@ const Events = (filters, noFilter: boolean) => {
   if (!filters === null) {
     filters = filters["filters"];
   }
+  const [eventData, setEventData] = useState([]);
 
-  const EventsTemp = [
-    {
-      title: "jons barmitsfa party",
-      day: "13",
-      month: "oct",
-      location: "my house",
-      imagePath: require("../../assets/placeholders/NextEventCover.png"),
-      eventType: "gaming",
-      id: "1",
-    },
-    {
-      title: "sheilas barmitsfa party",
-      day: "13",
-      month: "oct",
-      location: "my house",
-      imagePath: require("../../assets/placeholders/NextEventCover.png"),
-      eventType: "gaming",
-      id: "2",
-    },
-  ];
+  useEffect(() => {
+    const getEventData = async () => {
+      const response = await GetEvents();
+      const content = await response.json();
+
+      setEventData(content);
+    };
+
+    getEventData();
+  }, []);
 
   // reload render when filters change
   //const [filtersState, setFiltersState] = useState([]);
@@ -60,9 +52,12 @@ const Events = (filters, noFilter: boolean) => {
 
   return (
     <ScrollView className="flex h-5/6 ">
-      {EventsTemp.map(
-        ({ title, day, month, location, imagePath, eventType, id }, index) => {
-          const isFiltered = handleIsFiltered(eventType);
+      {eventData !== undefined &&
+        eventData.map(({ date, group, location, title, id }, index) => {
+          const day = date.split("-")[1];
+          const month = date.split("-")[2];
+          const isFiltered = handleIsFiltered(group);
+
           if (isFiltered) {
             return (
               <View key={index} className=" mt-4">
@@ -71,15 +66,14 @@ const Events = (filters, noFilter: boolean) => {
                   day={day}
                   month={month}
                   location={location}
-                  imagePath={imagePath}
-                  eventType={eventType}
                   id={id}
+                  // imagePath={imagePath}
+                  eventType={group}
                 />
               </View>
             );
           }
-        }
-      )}
+        })}
     </ScrollView>
   );
 };

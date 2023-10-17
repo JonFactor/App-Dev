@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GetUser from "../functions/GetUser";
+import SetCookies from "../functions/SetCookies";
 
 export const AuthContext = createContext(null);
 
@@ -34,14 +35,20 @@ export const AuthProvider = ({ children }) => {
   };
 
   const getUserInfo = async () => {
-    const userToken = await AsyncStorage.getItem("userToken");
-    const response = await GetUser(userToken);
+    const cookie = await AsyncStorage.getItem("userToken");
+    const responseSetUser = await SetCookies(
+      cookie.split(";")[0].split("=")[1]
+    );
+
+    console.log(responseSetUser.status);
+
+    const response = await GetUser();
     if (response.status !== 200) {
       // console.log(response.status);
       return;
     }
     const content = await response.json();
-    return content;
+    return content.name;
   };
 
   useEffect(() => {

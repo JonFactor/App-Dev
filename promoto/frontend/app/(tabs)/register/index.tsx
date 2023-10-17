@@ -3,14 +3,17 @@ import React, { useState } from "react";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
 import Register from "../../../functions/Register";
+import { Image } from "expo-image";
 
 const register = () => {
   const router = useRouter();
 
-  const [fullName, setFullName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passConfrim, setPassConfrim] = useState("");
 
   const [nameErr, setNameErr] = useState("");
   const [usrNameErr, setUsrNameErr] = useState("");
@@ -20,18 +23,19 @@ const register = () => {
   const validateUserEntry = () => {
     let hasErrors = false;
 
-    const minNameLength = 3;
+    const minNameLength = 2;
     const minUserNameLength = 6;
 
-    if (fullName.length <= minNameLength) {
-      setNameErr(`Name must be longer than ${minNameLength} chars`);
-      hasErrors = true;
-    } else if (!fullName.includes(" ")) {
-      setNameErr("Name formated: First Last");
-      hasErrors = true;
-    } else {
-      setNameErr("");
-    }
+    const names = [firstName, lastName];
+
+    names.forEach((value: string, index: number) => {
+      if (value.length <= minNameLength) {
+        setNameErr(`Name must be longer than ${minNameLength} chars`);
+        hasErrors = true;
+      } else {
+        setNameErr("");
+      }
+    });
 
     if (userName.length <= minUserNameLength) {
       setUsrNameErr(`User name must be longer than ${minUserNameLength} chars`);
@@ -58,16 +62,19 @@ const register = () => {
     }
 
     const validPassword = new RegExp(
-      "^(?=.*?[A-Za-z!@#$%^&*])(?=.*?[0-9]).{6,}$"
+      "^(?=.*?[A-Za-z!@#$%^&*])(?=.*?[0-9]).{5,}$"
     );
 
-    if (!validPassword.test(passErr)) {
+    if (!validPassword.test(password)) {
       setPassErr(
-        "Password must be longer than 7 chars, and be included in the following: A-Z, a-z,!@#$%^&*, 0-9"
+        "Password must be longer than 5 chars, and be included in the following: A-Z, a-z,!@#$%^&*, 0-9"
       );
       hasErrors = true;
     } else if (password.includes(" ")) {
       setPassErr("Spaces are not allowed in password");
+      hasErrors = true;
+    } else if (password !== passConfrim) {
+      setPassErr("Password and Password confrimation do not match.");
       hasErrors = true;
     } else {
       setPassErr("");
@@ -79,80 +86,166 @@ const register = () => {
     return true;
   };
 
-  const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
-
   const submitForm = async () => {
     if (!validateUserEntry()) {
       return;
     }
-    const name = userName;
 
-    const response = await Register({ name, email, password });
+    const name = userName;
+    const first = firstName;
+    const last = lastName;
+
+    const response = await Register(name, email, password, first, last);
 
     if (response.status !== 200) {
       return;
     }
 
-    router.replace("/login");
+    router.push("/login");
   };
   return (
     <View className=" p-10">
-      <TouchableOpacity
-        onPress={() => {
-          router.back();
-        }}
-      >
-        <Text>back</Text>
-      </TouchableOpacity>
-      <View>
+      <View className=" flex-row mt-8">
+        <TouchableOpacity
+          onPress={() => {
+            router.back();
+          }}
+        >
+          <View className=" flex h-6 w-5 ">
+            <Image
+              contentFit="cover"
+              className="flex-1"
+              source={require("../../../assets/icons/backArrow.svg")}
+            />
+          </View>
+        </TouchableOpacity>
+        <Text className=" ml-10 text-4xl text-md-blue font-semibold">
+          Communivo
+        </Text>
+      </View>
+      <View className=" mt-8 space-y-10">
         <View>
           <Text className=" text-red-400">{nameErr}</Text>
-          <Text>Full Name:</Text>
-          <TextInput
-            value={fullName}
-            onChangeText={(text) => {
-              setFullName(text);
-            }}
-            placeholder={"John Doe"}
-          />
+          <View className="flex-row space-x-6">
+            <View className=" w-36">
+              <TextInput
+                value={firstName}
+                onChangeText={(text) => {
+                  setFirstName(text);
+                }}
+                placeholder={"First"}
+                className=" text-2xl ml-2"
+              />
+              <View className=" w-full h-1 bg-md-purple" />
+            </View>
+            <View className=" w-36">
+              <TextInput
+                value={lastName}
+                onChangeText={(text) => {
+                  setLastName(text);
+                }}
+                placeholder={"Last"}
+                className=" text-2xl ml-2"
+              />
+              <View className=" w-full h-1 bg-md-purple" />
+            </View>
+          </View>
         </View>
-        <View>
+        <View className=" mt-4">
           <Text className=" text-red-400">{usrNameErr}</Text>
-          <Text>User Name:</Text>
-          <TextInput
-            value={userName}
-            onChangeText={(text) => {
-              setUserName(text);
-            }}
-            placeholder={"JohnDoe123"}
-          />
+          <View className=" flex-row">
+            <View className=" flex w-9 h-12 ml-2 mb-1 ">
+              <Image
+                className=" flex-1 "
+                contentFit="cover"
+                source={require("../../../assets/login/person.svg")}
+              />
+            </View>
+            <TextInput
+              value={userName}
+              onChangeText={(text) => {
+                setUserName(text);
+              }}
+              placeholder={"User Name"}
+              className=" text-2xl ml-4"
+            />
+          </View>
+          <View className=" w-full h-1 bg-md-purple" />
         </View>
-        <View>
-          <Text className=" text-red-400">{emailErr}</Text>
-          <Text>Email:</Text>
-          <TextInput
-            value={email}
-            onChangeText={(text) => {
-              setEmail(text);
-            }}
-            placeholder={"John@Doe.com"}
-          />
+        <View className=" mt-4">
+          <View>
+            <Text className=" text-red-400">{emailErr}</Text>
+            <View className=" flex-row">
+              <View className=" flex w-14 h-10">
+                <Image
+                  className=" flex-1 ml-2 mb-1"
+                  contentFit="cover"
+                  source={require("../../../assets/icons/mail.svg")}
+                />
+              </View>
+              <TextInput
+                value={email}
+                onChangeText={(text) => {
+                  setEmail(text);
+                }}
+                placeholder={"Email"}
+                className=" text-2xl ml-4 mb-1"
+              />
+            </View>
+            <View className=" w-full h-1 bg-md-purple" />
+          </View>
         </View>
-        <View>
+        <View className=" mt-4">
           <Text className=" text-red-400">{passErr}</Text>
-          <Text>Password:</Text>
-          <TextInput
-            value={password}
-            onChangeText={(text) => {
-              setPassword(text);
-            }}
-            placeholder={"12345678"}
-          />
+          <View className=" flex-row">
+            <View className=" flex h-11 w-10 ml-2 mb-1">
+              <Image
+                contentFit="cover"
+                className=" flex-1"
+                source={require("../../../assets/login/lock.svg")}
+              />
+            </View>
+            <TextInput
+              secureTextEntry={true}
+              className=" text-2xl ml-4"
+              value={password}
+              onChangeText={(text) => {
+                setPassword(text);
+              }}
+              placeholder={"Password"}
+            />
+          </View>
+          <View className=" w-full h-1 bg-md-purple" />
+        </View>
+        <View className=" mt-4">
+          <Text className=" text-red-400">{passErr}</Text>
+          <View className=" flex-row">
+            <View className=" flex h-11 w-12 ml-2 mb-1">
+              <Image
+                contentFit="cover"
+                className=" flex-1"
+                source={require("../../../assets/icons/double-lock.svg")}
+              />
+            </View>
+            <TextInput
+              secureTextEntry={true}
+              className=" text-2xl ml-4"
+              value={passConfrim}
+              onChangeText={(text) => {
+                setPassConfrim(text);
+              }}
+              placeholder={"Confirm Password"}
+            />
+          </View>
+          <View className=" w-full h-1 bg-md-purple" />
         </View>
       </View>
-      <View>
-        <TouchableOpacity onPress={submitForm}>
-          <Text>Submit</Text>
+      <View className=" w-full items-center mt-12">
+        <TouchableOpacity
+          onPress={submitForm}
+          className=" bg-md-blue w-64 h-14 items-center"
+        >
+          <Text className=" text-white text-2xl mt-3 ">Submit</Text>
         </TouchableOpacity>
       </View>
     </View>
