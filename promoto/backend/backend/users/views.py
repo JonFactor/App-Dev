@@ -15,12 +15,20 @@ class RegisterView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+    
+class SetProfileView(APIView):
+    def post(self, request):
+        reqId = request.data['id']
+        profileUriKey = request.data['profilePicUrl']
+        User.objects.filter(id = reqId).update(profilePic=profileUriKey)
+        
+        response = Response()
+        return response
 
 class LoginViaCookiesView(APIView):
     def post(self, request):
         
         token = request.data
-        print(token)
         
         response = Response()
         response.set_cookie(key="jwt", value=token, httponly=True)

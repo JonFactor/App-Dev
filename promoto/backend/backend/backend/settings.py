@@ -136,10 +136,3 @@ AUTH_USER_MODEL = 'users.User'
 # allow backend to be accessed everywhere w/ cookies 
 CORS_ORIGN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-
-# set paths to images
-MEDIA_URL = "/media/"
-STATIC_URL = "/static/"
-
-MEDIA_ROOT= os.path.join(BASE_DIR,"media/")
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)

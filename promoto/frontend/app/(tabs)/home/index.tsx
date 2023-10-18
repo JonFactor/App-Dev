@@ -51,7 +51,7 @@ const home = () => {
   };
 
   const handleNewEventClick = () => {
-    router.push("events");
+    router.replace("events");
   };
 
   return (

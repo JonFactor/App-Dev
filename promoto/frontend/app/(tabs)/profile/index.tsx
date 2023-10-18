@@ -7,15 +7,21 @@ import { Image } from "expo-image";
 import GetUserProfile from "../../../functions/GetUserProfile";
 import GetUser from "../../../functions/GetUser";
 import Events from "../../../components/collections/Events";
+import * as ImagePicker from "expo-image-picker";
+import { Storage } from "aws-amplify";
+import { v4 as uuidv4 } from "uuid";
+import UpdateUser from "../../../functions/UpdateUser";
 
 const profile = () => {
   const { logout, getUserInfo } = useContext(AuthContext);
   // const router = useRouter();
 
-  const [profileImage, setProfileImage] = useState(null);
+  const [userProfilePic, setUserProfilePic] = useState(null);
   const [userName, setUserName] = useState("");
   const [userDescription, setUserDesctiption] = useState("");
   const [navSelected, setNavSelected] = useState(0);
+  const [userProfileUri, setUserProfileUri] = useState(null);
+  const [userId, setUserId] = useState(null);
   const usersColor = "green";
 
   useEffect(() => {
@@ -23,12 +29,45 @@ const profile = () => {
       const response = await GetUser();
       const content = await response.json();
       // set user desc
-      setUserDesctiption("i fucking hate this dumb ass shit, expo sucks");
-
+      setUserDesctiption(content.description);
       setUserName(content.name);
+      setUserId(content.id);
+
+      const signedUrl = await Storage.get(content.profilePic);
+      setUserProfilePic(signedUrl);
     };
     loadUser();
   }, []);
+
+  const handleAddPhotos = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (result.canceled) {
+      return;
+    }
+    setUserProfilePic(result.assets[0].uri);
+
+    const imageKey = uuidv4();
+    const img = await fetchImageFromUri(userProfilePic);
+
+    const imageStoreageResult = await Storage.put(imageKey, img, {
+      level: "public",
+      contentType: img.type,
+    });
+
+    const response = await UpdateUser(imageKey, userId);
+    console.log(response.status);
+  };
+
+  const fetchImageFromUri = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+
+    return blob;
+  };
 
   const handleMessageUser = () => {
     // goto message page with this user as recipiant
@@ -64,12 +103,21 @@ const profile = () => {
           </View>
         </TouchableOpacity>
         <View className=" flex">
-          <View className=" flex w-40 rounded-full  aspect-square ml-16">
-            <Image
-              className=" flex-1 rounded-full "
-              source={GetUserProfile()}
-            />
-          </View>
+          <TouchableOpacity
+            onPress={handleAddPhotos}
+            className={`flex w-40 rounded-full  aspect-square ml-16 ${
+              userProfilePic === null && " bg-gray-400 items-center flex"
+            }`}
+          >
+            {userProfilePic === null ? (
+              <Text className=" text-6xl font-semibold  mt-12 ">JF</Text>
+            ) : (
+              <Image
+                className=" flex-1 rounded-full "
+                source={userProfilePic}
+              />
+            )}
+          </TouchableOpacity>
         </View>
         <TouchableOpacity
           className=" ml-20"

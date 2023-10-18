@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from "uuid";
 
 const events = () => {
   const [warning, setWarning] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const [eventTitle, setEventTitle] = useState("");
   const [eventDescription, setEventDesctiption] = useState("");
@@ -72,21 +73,19 @@ const events = () => {
     if (!validateEventEntries()) {
       return;
     }
-    const ownerId = 1;
-
-    let dateList = eventDate.split("/");
-    const date = `${dateList[2]}-${dateList[1]}-${dateList[0]}`;
-
-    const catigory = eventGroup.join(", ");
 
     const imageKey = uuidv4();
-
     const img = await fetchImageFromUri(eventImgs);
 
     const imageStoreageResult = await Storage.put(imageKey, img, {
       level: "public",
       contentType: img.type,
     });
+
+    const ownerId = 1;
+    let dateList = eventDate.split("/");
+    const date = `${dateList[2]}-${dateList[1]}-${dateList[0]}`;
+    const catigory = eventGroup.join(", ");
 
     const request = await CreateEvent(
       eventTitle,
