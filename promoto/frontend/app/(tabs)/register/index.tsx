@@ -98,10 +98,11 @@ const register = () => {
     const response = await Register(name, email, password, first, last);
 
     if (response.status !== 200) {
+      console.log(response.status);
       return;
     }
 
-    router.push("/login");
+    router.replace("/login");
   };
   return (
     <View className=" p-10">

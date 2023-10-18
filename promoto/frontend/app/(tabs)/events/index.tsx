@@ -8,6 +8,7 @@ import groupTypes from "../../../constants/groupTypes";
 import * as ImagePicker from "expo-image-picker";
 import CreateEvent from "../../../functions/CreateEvent";
 import { Storage } from "aws-amplify";
+import { v4 as uuidv4 } from "uuid";
 
 const events = () => {
   const [warning, setWarning] = useState("");
@@ -60,6 +61,13 @@ const events = () => {
     return true;
   };
 
+  const fetchImageFromUri = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+
+    return blob;
+  };
+
   const handleEventSubmit = async () => {
     if (!validateEventEntries()) {
       return;
@@ -71,19 +79,14 @@ const events = () => {
 
     const catigory = eventGroup.join(", ");
 
-    const data = {
-      eventTitle: eventTitle,
-      ownerId: ownerId,
-      date: date,
-      catigory: catigory,
-      eventLocation: eventLocation,
-      eventImgs: eventImgs,
-    };
+    const imageKey = uuidv4();
 
-    const imageKey = eventImgs.split("ImagePicker/")[1];
+    const img = await fetchImageFromUri(eventImgs);
 
-    const imageStoreageResult = await Storage.put(imageKey, eventImgs);
-    console.log(imageStoreageResult);
+    const imageStoreageResult = await Storage.put(imageKey, img, {
+      level: "public",
+      contentType: img.type,
+    });
 
     const request = await CreateEvent(
       eventTitle,
@@ -94,7 +97,9 @@ const events = () => {
       imageKey
     );
 
-    router.back();
+    if (request.status === 200) {
+      router.back();
+    }
   };
 
   const handleEventBack = () => {

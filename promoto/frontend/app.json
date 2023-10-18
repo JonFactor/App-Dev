@@ -1,6 +1,6 @@
 {
   "expo": {
-    "scheme": "mycoolredirect",
+    "scheme": "myapp",
     "web": {
       "bundler": "metro"
     },

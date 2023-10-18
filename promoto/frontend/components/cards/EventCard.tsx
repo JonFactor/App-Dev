@@ -33,7 +33,7 @@ const EventCard = ({
 
   useEffect(() => {
     const getBackround = async () => {
-      let imageKey = await Storage.get(imagePath);
+      let signedUrl = await Storage.get(imagePath);
       // imageKey = await Promise.all(
       //   imageKey.map(async (k) => {
       //     if (k.key === imagePath) {
@@ -42,9 +42,9 @@ const EventCard = ({
       //     }
       //   })
       // );
-      console.log(imageKey);
-      setImage(imageKey);
+      setImage(signedUrl);
     };
+    getBackround();
   }, []);
 
   if (eventType === null) {

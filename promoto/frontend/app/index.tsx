@@ -4,9 +4,9 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 import "../app.d.ts";
 import { AuthContext } from "../context/AuthContext.tsx";
 
-import Amplify from "aws-amplify";
-import config from "../src/aws-exports";
-Amplify.configure(config);
+import { Amplify } from "aws-amplify";
+import awsmobile from "../src/aws-exports";
+Amplify.configure(awsmobile);
 
 const StartPage = () => {
   const { isLoading, userToken } = useContext(AuthContext);
