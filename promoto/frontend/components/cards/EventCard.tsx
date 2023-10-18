@@ -1,8 +1,9 @@
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { Image, ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
+import { Storage } from "aws-amplify";
 
 const EventCard = ({
   location,
@@ -27,6 +28,24 @@ const EventCard = ({
     "nov",
     "dec",
   ];
+
+  const [image, setImage] = useState(null);
+
+  useEffect(() => {
+    const getBackround = async () => {
+      let imageKey = await Storage.get(imagePath);
+      // imageKey = await Promise.all(
+      //   imageKey.map(async (k) => {
+      //     if (k.key === imagePath) {
+      //       const signedUrl = await Storage.get(k.key);
+      //       return signedUrl;
+      //     }
+      //   })
+      // );
+      console.log(imageKey);
+      setImage(imageKey);
+    };
+  }, []);
 
   if (eventType === null) {
     eventType = "misc";
@@ -78,11 +97,7 @@ const EventCard = ({
       }}
       scrollEventThrottle={16}
     >
-      <Image
-        source={imagePath}
-        contentFit="cover"
-        className="rounded-3xl flex-1"
-      >
+      <Image source={image} contentFit="cover" className="rounded-3xl flex-1">
         <LinearGradient
           className=" p-4 w-fit h-96 flex-col"
           colors={["rgba(0,0,0,.15)", "transparent"]}

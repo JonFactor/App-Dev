@@ -7,6 +7,7 @@ import register from "../register";
 import groupTypes from "../../../constants/groupTypes";
 import * as ImagePicker from "expo-image-picker";
 import CreateEvent from "../../../functions/CreateEvent";
+import { Storage } from "aws-amplify";
 
 const events = () => {
   const [warning, setWarning] = useState("");
@@ -70,13 +71,27 @@ const events = () => {
 
     const catigory = eventGroup.join(", ");
 
+    const data = {
+      eventTitle: eventTitle,
+      ownerId: ownerId,
+      date: date,
+      catigory: catigory,
+      eventLocation: eventLocation,
+      eventImgs: eventImgs,
+    };
+
+    const imageKey = eventImgs.split("ImagePicker/")[1];
+
+    const imageStoreageResult = await Storage.put(imageKey, eventImgs);
+    console.log(imageStoreageResult);
+
     const request = await CreateEvent(
       eventTitle,
       ownerId,
       date,
       catigory,
       eventLocation,
-      eventImgs
+      imageKey
     );
 
     router.back();
