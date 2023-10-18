@@ -53,27 +53,29 @@ const Events = (filters, noFilter: boolean) => {
   return (
     <ScrollView className="flex h-5/6 ">
       {eventData !== undefined &&
-        eventData.map(({ date, group, location, title, id }, index) => {
-          const day = date.split("-")[1];
-          const month = date.split("-")[2];
-          const isFiltered = handleIsFiltered(group);
+        eventData.map(
+          ({ date, group, location, title, id, coverImg }, index) => {
+            const day = date.split("-")[1];
+            const month = date.split("-")[2];
+            const isFiltered = handleIsFiltered(group);
 
-          if (isFiltered) {
-            return (
-              <View key={index} className=" mt-4">
-                <EventCard
-                  title={title}
-                  day={day}
-                  month={month}
-                  location={location}
-                  id={id}
-                  // imagePath={imagePath}
-                  eventType={group}
-                />
-              </View>
-            );
+            if (isFiltered) {
+              return (
+                <View key={index} className=" mt-4">
+                  <EventCard
+                    title={title}
+                    day={day}
+                    month={month}
+                    location={location}
+                    id={id}
+                    imagePath={coverImg}
+                    eventType={group}
+                  />
+                </View>
+              );
+            }
           }
-        })}
+        )}
     </ScrollView>
   );
 };

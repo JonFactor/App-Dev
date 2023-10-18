@@ -75,9 +75,11 @@ const events = () => {
       ownerId,
       date,
       catigory,
-      eventLocation
+      eventLocation,
+      eventImgs
     );
-    console.log(request.status);
+
+    router.back();
   };
 
   const handleEventBack = () => {
@@ -128,7 +130,6 @@ const events = () => {
       return;
     }
     setEventImgs(result.assets[0].uri);
-    console.log(result);
   };
 
   return (

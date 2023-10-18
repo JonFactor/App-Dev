@@ -5,7 +5,7 @@ from .models import Event, Group
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = ['id', 'title', 'location', 'ownerId', 'date', 'group']
+        fields = ['id', 'title', 'location', 'ownerId', 'date', 'group', 'coverImg']
 
 class GroupSerialzier(serializers.ModelSerializer):
     class Meta:

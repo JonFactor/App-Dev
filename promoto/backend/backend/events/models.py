@@ -9,6 +9,7 @@ class Event(models.Model):
     ownerId = models.BigIntegerField()
     date = models.DateField(datetime.datetime.now)
     group = models.CharField(max_length=225, null="misc")
+    coverImg = models.ImageField(upload_to="images/", default=None, null=True, blank=True)
     
 class Group(models.Model):
     title = models.CharField(max_length=225)

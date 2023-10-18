@@ -3,12 +3,12 @@ const CreateEvent = async (
   ownerId: number,
   date: string,
   group: string,
-  location: string
+  location: string,
+  coverImg
   // coverImg: string
 ) => {
   return await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/events`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
     credentials: "include",
     body: JSON.stringify({
       title,
@@ -16,6 +16,7 @@ const CreateEvent = async (
       ownerId,
       date,
       group,
+      coverImg,
     }),
   });
 };

@@ -9,10 +9,25 @@ const EventCard = ({
   month,
   day,
   title,
-  // imagePath,
+  imagePath,
   eventType,
   id,
 }) => {
+  const monthsToStrings = [
+    "jan",
+    "feb",
+    "mar",
+    "apr",
+    "may",
+    "jun",
+    "jul",
+    "aug",
+    "sep",
+    "oct",
+    "nov",
+    "dec",
+  ];
+
   if (eventType === null) {
     eventType = "misc";
   }
@@ -21,8 +36,6 @@ const EventCard = ({
   const handleNavToEvent = () => {
     router.push(`events/${id}`);
   };
-
-  const imagePath = require("../../assets/placeholders/NextEventCover.png");
 
   const handleDislikeEvent = () => {
     // post pref event type -.01 + remove from feed
@@ -42,6 +55,13 @@ const EventCard = ({
       return false;
     }
   };
+
+  let monthIndex;
+  if (month[0] === "0") {
+    monthIndex = month[1] - 1;
+  } else {
+    monthIndex = month - 1;
+  }
 
   return (
     <ScrollView
@@ -70,7 +90,9 @@ const EventCard = ({
           <View className=" flex-row">
             <View className=" flex-col items-center bg-red-400 w-16 aspect-square rounded-full">
               <Text className=" text-3xl text-white mt-2  absolute">{day}</Text>
-              <Text className=" text-white mt-10 ">{month}</Text>
+              <Text className=" text-white mt-10 ">
+                {monthsToStrings[monthIndex]}
+              </Text>
             </View>
             <Text className=" ml-2 text-2xl text-white font-semibold w-44">
               {title}
