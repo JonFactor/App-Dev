@@ -8,6 +8,7 @@ import Events from "../../../components/collections/Events";
 import * as ImagePicker from "expo-image-picker";
 import { Storage } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
+import { ScrollView } from "react-native";
 
 const profile = () => {
   const { logout, getUserInfo, getUserProfilePhoto, setUserProfilePhoto } =
@@ -77,7 +78,7 @@ const profile = () => {
 
   const handleDisplayProfileActions = () => {};
   return (
-    <View className=" mt-20">
+    <ScrollView className=" mt-20">
       <View className=" flex-row ml-8 ">
         <TouchableOpacity className=" flex  " onPress={() => router.back()}>
           <View className=" flex w-5 h-7">
@@ -186,7 +187,7 @@ const profile = () => {
           )}
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

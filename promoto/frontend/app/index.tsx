@@ -1,5 +1,5 @@
 import { Redirect, Stack } from "expo-router";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import "../app.d.ts";
 import { AuthContext } from "../context/AuthContext";
@@ -9,22 +9,32 @@ import awsmobile from "../src/aws-exports";
 Amplify.configure(awsmobile);
 
 const StartPage = () => {
-  const { isLoading, userToken } = useContext(AuthContext);
+  const { isLoading, userToken, getUserInfo } = useContext(AuthContext);
+  const [isNotExpired, setIsNotExpired] = useState(true);
 
-  if (isLoading) {
-    return (
-      <View className=" flex-1 justify-items-center align-middle">
-        <ActivityIndicator size={"large"} />
-      </View>
-    );
-  }
+  let cookieNotExpired;
+  useEffect(() => {
+    const cookieIsNotExpired = async () => {
+      const result = await getUserInfo();
+      setIsNotExpired(result);
+    };
+    cookieIsNotExpired();
+  }, []);
 
   return (
     <View>
-      {userToken === null ? (
-        <Redirect href={"/login"} />
+      {isLoading ? (
+        <View className=" flex-1 justify-items-center align-middle w-screen h-screen">
+          <ActivityIndicator size={"large"} className=" mt-72  " />
+        </View>
       ) : (
-        <Redirect href={"/home"} />
+        <View>
+          {!isNotExpired ? (
+            <Redirect href={"/login"} />
+          ) : (
+            <Redirect href={"/home"} />
+          )}
+        </View>
       )}
     </View>
   );

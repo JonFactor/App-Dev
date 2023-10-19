@@ -52,15 +52,18 @@ export const AuthProvider = ({ children }) => {
   };
 
   const getUserProfilePhoto = async () => {
+    setIsLoading(true);
     const userInfo = await getUserInfo();
     const userPhotoUri = userInfo.profilePic;
 
     const photo = await Storage.get(userPhotoUri);
 
+    setIsLoading(false);
     return photo;
   };
 
   const setUserProfilePhoto = async (image: String, userId: String = null) => {
+    setIsLoading(true);
     const imageKey = uuidv4();
     const img = await fetchImageFromUri(image);
 
@@ -73,18 +76,25 @@ export const AuthProvider = ({ children }) => {
       userId = (await getUserInfo()).id;
     }
     const response = await UserUpdate(imageKey, userId);
+    if (response.ok) {
+      setIsLoading(false);
+      return true;
+    }
+    setIsLoading(false);
+    return false;
   };
 
   const getUserInfo = async () => {
+    setIsLoading(true);
     const cookie = await AsyncStorage.getItem("userToken");
     const cookieResponse = await UserLoginViaCookies(cookie);
 
     const response = await UserGetDetails();
     if (response === null || response.status === 403) {
-      return null;
+      setIsLoading(false);
+      return false;
     }
-
-    console.log("test");
+    setIsLoading(false);
     return response;
   };
 

@@ -49,7 +49,7 @@ const Events = (filters, noFilter: boolean) => {
   };
 
   return (
-    <ScrollView className="flex h-5/6 ">
+    <View className="flex h-5/6 ">
       {eventData !== undefined &&
         eventData.map(
           ({ date, group, location, title, id, coverImg }, index) => {
@@ -74,7 +74,7 @@ const Events = (filters, noFilter: boolean) => {
             }
           }
         )}
-    </ScrollView>
+    </View>
   );
 };
 
