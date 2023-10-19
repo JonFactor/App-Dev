@@ -2,7 +2,7 @@ import { View, Text } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { router, useRouter } from "expo-router";
+import router from "../../../common/routerHook";
 import { Image } from "expo-image";
 import GetUserProfile from "../../../functions/GetUserProfile";
 import GetUser from "../../../functions/GetUser";
@@ -13,8 +13,8 @@ import { v4 as uuidv4 } from "uuid";
 import UpdateUser from "../../../functions/UpdateUser";
 
 const profile = () => {
-  const { logout, getUserInfo } = useContext(AuthContext);
-  // const router = useRouter();
+  const { logout, getUserInfo, getUserProfilePhoto, setUserProfilePhoto } =
+    useContext(AuthContext);
 
   const [userProfilePic, setUserProfilePic] = useState(null);
   const [userName, setUserName] = useState("");
@@ -26,15 +26,14 @@ const profile = () => {
 
   useEffect(() => {
     const loadUser = async () => {
-      const response = await GetUser();
-      const content = await response.json();
+      const content = await getUserInfo();
       // set user desc
       setUserDesctiption(content.description);
       setUserName(content.name);
       setUserId(content.id);
 
-      const signedUrl = await Storage.get(content.profilePic);
-      setUserProfilePic(signedUrl);
+      const profilePic = await getUserProfilePhoto();
+      setUserProfilePic(profilePic);
     };
     loadUser();
   }, []);
@@ -48,18 +47,10 @@ const profile = () => {
     if (result.canceled) {
       return;
     }
-    setUserProfilePic(result.assets[0].uri);
 
-    const imageKey = uuidv4();
-    const img = await fetchImageFromUri(userProfilePic);
-
-    const imageStoreageResult = await Storage.put(imageKey, img, {
-      level: "public",
-      contentType: img.type,
-    });
-
-    const response = await UpdateUser(imageKey, userId);
-    console.log(response.status);
+    const userProfilePhoto = setUserProfilePhoto(result);
+    const profilePic = await getUserProfilePhoto();
+    setUserProfilePic(profilePic);
   };
 
   const fetchImageFromUri = async (uri) => {

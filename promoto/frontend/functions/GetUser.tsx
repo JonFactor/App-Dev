@@ -4,6 +4,13 @@ const GetUser = async () => {
       "Content-Type": "application-json",
     },
     credentials: "include",
+  }).then(async (response) => {
+    if (response.ok) {
+      return await response.json();
+    } else {
+      console.log(response.status);
+      return null;
+    }
   });
 };
 export default GetUser;

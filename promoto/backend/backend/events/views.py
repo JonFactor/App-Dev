@@ -17,4 +17,3 @@ class EventsView(APIView):
         events = Event.objects.all()
         serializer = EventSerializer(events, many=True)
         return Response(data=serializer.data)
-        

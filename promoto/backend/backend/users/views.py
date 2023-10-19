@@ -28,7 +28,8 @@ class SetProfileView(APIView):
 class LoginViaCookiesView(APIView):
     def post(self, request):
         
-        token = request.data
+        token = request.data['jwt'].split(";")[0]
+        print(token)
         
         response = Response()
         response.set_cookie(key="jwt", value=token, httponly=True)
@@ -39,7 +40,7 @@ class LoginViaCookiesView(APIView):
         
         return response
 
-class LoginView(APIView):
+class LoginView(APIView): 
     def post(self, request):
         email = request.data['email']
         password = request.data['password']
@@ -83,6 +84,7 @@ class UserView(APIView):
         except jwt.ExpiredSignatureError:
             raise AuthenticationFailed('jwt expired signature')
 
+        print(payload)
         user = User.objects.filter(id=payload['id']).first()
         serializer = UserSerializer(user)
 

@@ -6,7 +6,6 @@ import React, {
   useReducer,
   useState,
 } from "react";
-import { Link, Redirect, useRouter } from "expo-router";
 import { Image } from "expo-image";
 import { ScrollView } from "react-native-gesture-handler";
 import Events from "../../../components/collections/Events";
@@ -15,28 +14,24 @@ import { AuthContext } from "../../../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import groupTypes from "../../../constants/groupTypes";
 import SetCookies from "../../../functions/SetCookies";
+import router from "../../../common/routerHook";
 
 export const FilterContext = createContext(null);
 
 const home = () => {
-  const [userName, setUserName] = useState("");
+  const [userData, setUserData] = useState(null);
   const [currentFilter, setCurrentFilter] = useState([]);
   const { login, getUserInfo } = useContext(AuthContext);
 
   useEffect(() => {
-    const setCookies = async () => {};
-
     const setUser = async () => {
-      const name = await getUserInfo();
+      const userData = await getUserInfo();
 
-      setUserName(name);
+      setUserData(userData);
+      console.log(userData);
     };
-
-    setCookies();
     setUser();
   }, []);
-
-  const router = useRouter();
 
   const handleFilterBtnPress = (index: number) => {
     if (!currentFilter.includes(groupTypes[index])) {
@@ -58,7 +53,13 @@ const home = () => {
     <View className=" mt-12 mx-4 flex">
       <View className=" flex-row mx-4 ">
         <View className="mt-6">
-          <Text className=" text-xl">Hi {userName},</Text>
+          <Text className=" text-xl">
+            Hi{" "}
+            {userData !== undefined && userData !== null
+              ? userData.name
+              : "ERROR"}
+            ,
+          </Text>
           <View className=" flex-row space-x-2">
             <Text className="text-3xl font-bold text-md-purple">Welcome</Text>
             <Text className="text-3xl font-semibold">Back</Text>

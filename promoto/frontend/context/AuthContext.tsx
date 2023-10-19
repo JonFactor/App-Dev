@@ -2,6 +2,9 @@ import React, { createContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GetUser from "../functions/GetUser";
 import SetCookies from "../functions/SetCookies";
+import { Storage } from "aws-amplify";
+import { v4 as uuidv4 } from "uuid";
+import UpdateUser from "../functions/UpdateUser";
 
 export const AuthContext = createContext(null);
 
@@ -34,21 +37,47 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(false);
   };
 
+  const fetchImageFromUri = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+
+    return blob;
+  };
+
+  const getUserProfilePhoto = async () => {
+    const userInfo = await getUserInfo();
+    const userPhotoUri = userInfo.profilePic;
+
+    const photo = await Storage.get(userPhotoUri);
+
+    return photo;
+  };
+
+  const setUserProfilePhoto = async (image: String, userId: String = null) => {
+    const imageKey = uuidv4();
+    const img = await fetchImageFromUri(image);
+
+    const imageStoreageResult = await Storage.put(imageKey, img, {
+      level: "public",
+      contentType: img.type,
+    });
+
+    if (userId === null) {
+      userId = (await getUserInfo()).id;
+    }
+    const response = await UpdateUser(imageKey, userId);
+  };
+
   const getUserInfo = async () => {
     const cookie = await AsyncStorage.getItem("userToken");
-    const responseSetUser = await SetCookies(
-      cookie.split(";")[0].split("=")[1]
-    );
-
-    console.log(responseSetUser.status);
+    const cookieResponse = await SetCookies(cookie);
 
     const response = await GetUser();
-    if (response.status !== 200) {
-      // console.log(response.status);
+    if (response === null) {
       return;
     }
-    const content = await response.json();
-    return content.name;
+
+    return response;
   };
 
   useEffect(() => {
@@ -57,7 +86,15 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ login, logout, isLoading, userToken, getUserInfo }}
+      value={{
+        login,
+        logout,
+        isLoading,
+        userToken,
+        getUserInfo,
+        getUserProfilePhoto,
+        setUserProfilePhoto,
+      }}
     >
       {children}
     </AuthContext.Provider>

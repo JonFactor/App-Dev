@@ -1,18 +1,11 @@
 import { View, Text } from "react-native";
 import React from "react";
-import {
-  Stack,
-  useSearchParams,
-  router,
-  useGlobalSearchParams,
-  useRouter,
-} from "expo-router";
+import { Stack, useSearchParams, useGlobalSearchParams } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import router from "../../../common/routerHook";
 
 const eventDetailsPage = () => {
   const { id } = useGlobalSearchParams();
-
-  const router = useRouter();
 
   const eventDetails = async () => {
     // find event in db via id

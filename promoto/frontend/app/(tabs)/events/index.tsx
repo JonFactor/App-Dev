@@ -1,6 +1,6 @@
 import { View, Text, TextInput } from "react-native";
 import React, { useState } from "react";
-import { Redirect, useRouter } from "expo-router";
+import { Redirect } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Image } from "expo-image";
 import register from "../register";
@@ -9,6 +9,7 @@ import * as ImagePicker from "expo-image-picker";
 import CreateEvent from "../../../functions/CreateEvent";
 import { Storage } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
+import router from "../../../common/routerHook";
 
 const events = () => {
   const [warning, setWarning] = useState("");
@@ -34,8 +35,6 @@ const events = () => {
     "woah Shoe",
     "foe Doe",
   ];
-
-  const router = useRouter();
 
   const validateEventEntries = () => {
     if (eventTitle === "") {

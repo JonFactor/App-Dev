@@ -1,13 +1,11 @@
 import { View, Text } from "react-native";
 import React, { useState } from "react";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
-import { useRouter } from "expo-router";
 import Register from "../../../functions/Register";
 import { Image } from "expo-image";
+import router from "../../../common/routerHook";
 
 const register = () => {
-  const router = useRouter();
-
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [userName, setUserName] = useState("");

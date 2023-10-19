@@ -1,9 +1,9 @@
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "expo-router";
 import { Image, ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { Storage } from "aws-amplify";
+import router from "../../common/routerHook";
 
 const EventCard = ({
   location,
@@ -43,7 +43,7 @@ const EventCard = ({
     eventType = "misc";
   }
   const [cardOpacity, setCardOpacity] = useState(100);
-  const router = useRouter();
+
   const handleNavToEvent = () => {
     router.push(`events/${id}`);
   };

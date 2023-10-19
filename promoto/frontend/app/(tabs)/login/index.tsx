@@ -3,12 +3,12 @@ import React, { useContext, useEffect, useState } from "react";
 import { Input } from "react-native-elements";
 import LoginForm from "../../../components/forms/LoginForm";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Redirect, router, useRouter } from "expo-router";
 import { useFonts } from "expo-font";
 import { Image } from "expo-image";
 import { AuthContext } from "../../../context/AuthContext";
 import response from "../../../functions/Login";
 import Login from "../../../functions/Login";
+import router from "../../../common/routerHook";
 
 const LoginPage = () => {
   const { login } = useContext(AuthContext);
@@ -21,8 +21,6 @@ const LoginPage = () => {
 
   const validateUserEntry = () => {
     const allowedPasswordAttempts = 5;
-
-    const { back } = useRouter();
 
     let emailErrored = true;
     if (!userEmail.includes("@") || userEmail.indexOf(" ") > -1) {
@@ -57,8 +55,6 @@ const LoginPage = () => {
     require("../../../assets/login/eyeclosed.svg"),
   ];
 
-  const router = useRouter();
-
   useEffect(() => {}, [displayPassword]);
 
   const handleSignInclick = async () => {
@@ -78,8 +74,8 @@ const LoginPage = () => {
     }
 
     const cookie = response.headers.map["set-cookie"];
-
     login(cookie);
+
     router.back();
   };
 
