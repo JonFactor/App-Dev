@@ -30,6 +30,11 @@ export const AuthProvider = ({ children }) => {
     try {
       setIsLoading(true);
       let userToken = await AsyncStorage.getItem("userToken");
+      const isLoggedIn = await getUserInfo();
+      if (isLoggedIn === false) {
+        return false;
+      }
+
       setUserToken(userToken);
     } catch (ex) {
       console.log(ex);
@@ -73,8 +78,8 @@ export const AuthProvider = ({ children }) => {
     const cookieResponse = await SetCookies(cookie);
 
     const response = await GetUser();
-    if (response === null) {
-      return;
+    if (response.status === 403) {
+      return false;
     }
 
     return response;

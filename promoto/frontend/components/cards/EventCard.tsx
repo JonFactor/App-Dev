@@ -39,9 +39,10 @@ const EventCard = ({
     getBackround();
   }, []);
 
-  if (eventType === null) {
+  if (eventType === null || eventType === undefined) {
     eventType = "misc";
   }
+
   const [cardOpacity, setCardOpacity] = useState(100);
 
   const handleNavToEvent = () => {

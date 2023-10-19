@@ -20,9 +20,7 @@ const profile = () => {
   const [userName, setUserName] = useState("");
   const [userDescription, setUserDesctiption] = useState("");
   const [navSelected, setNavSelected] = useState(0);
-  const [userProfileUri, setUserProfileUri] = useState(null);
   const [userId, setUserId] = useState(null);
-  const usersColor = "green";
 
   useEffect(() => {
     const loadUser = async () => {
