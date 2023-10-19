@@ -4,13 +4,10 @@ import { AuthContext } from "../../../context/AuthContext";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import router from "../../../common/routerHook";
 import { Image } from "expo-image";
-import GetUserProfile from "../../../functions/GetUserProfile";
-import GetUser from "../../../functions/GetUser";
 import Events from "../../../components/collections/Events";
 import * as ImagePicker from "expo-image-picker";
 import { Storage } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
-import UpdateUser from "../../../functions/UpdateUser";
 
 const profile = () => {
   const { logout, getUserInfo, getUserProfilePhoto, setUserProfilePhoto } =
@@ -20,9 +17,7 @@ const profile = () => {
   const [userName, setUserName] = useState("");
   const [userDescription, setUserDesctiption] = useState("");
   const [navSelected, setNavSelected] = useState(0);
-  const [userProfileUri, setUserProfileUri] = useState(null);
   const [userId, setUserId] = useState(null);
-  const usersColor = "green";
 
   useEffect(() => {
     const loadUser = async () => {

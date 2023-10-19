@@ -8,5 +8,6 @@ class Event(models.Model):
     location = models.CharField(max_length=225)
     ownerId = models.IntegerField()
     date = models.DateField(datetime.datetime.now)
-    group = models.CharField(max_length=225, null="misc")
+    eventType = models.CharField(max_length=225, null="misc")
     coverImg = models.CharField(max_length=225, default="test.png")
+ 

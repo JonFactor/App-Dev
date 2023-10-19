@@ -2,7 +2,7 @@ import { View, Text, ScrollView } from "react-native";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import EventCard from "../cards/EventCard";
 import { FilterContext } from "../../app/(tabs)/home";
-import GetEvents from "../../functions/GetEvents";
+import { EventsGetAll } from "../../functions/Events";
 
 const Events = (filters, noFilter: boolean) => {
   // pull events from db
@@ -14,9 +14,7 @@ const Events = (filters, noFilter: boolean) => {
 
   useEffect(() => {
     const getEventData = async () => {
-      const response = await GetEvents();
-      const content = await response.json();
-
+      const content = await EventsGetAll();
       setEventData(content);
     };
 

@@ -9,11 +9,9 @@ import React, {
 import { Image } from "expo-image";
 import { ScrollView } from "react-native-gesture-handler";
 import Events from "../../../components/collections/Events";
-import GetUser from "../../../functions/GetUser";
 import { AuthContext } from "../../../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import groupTypes from "../../../constants/groupTypes";
-import SetCookies from "../../../functions/SetCookies";
 import router from "../../../common/routerHook";
 
 export const FilterContext = createContext(null);
@@ -28,7 +26,6 @@ const home = () => {
       const userData = await getUserInfo();
 
       setUserData(userData);
-      console.log(userData);
     };
     setUser();
   }, []);

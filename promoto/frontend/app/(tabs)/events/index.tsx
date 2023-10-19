@@ -6,7 +6,7 @@ import { Image } from "expo-image";
 import register from "../register";
 import groupTypes from "../../../constants/groupTypes";
 import * as ImagePicker from "expo-image-picker";
-import CreateEvent from "../../../functions/CreateEvent";
+import { EventCreate } from "../../../functions/Events";
 import { Storage } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
 import router from "../../../common/routerHook";
@@ -86,7 +86,7 @@ const events = () => {
     const date = `${dateList[2]}-${dateList[1]}-${dateList[0]}`;
     const catigory = eventGroup.join(", ");
 
-    const request = await CreateEvent(
+    const request = await EventCreate(
       eventTitle,
       ownerId,
       date,
