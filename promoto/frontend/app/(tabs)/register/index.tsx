@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
 import React, { useState } from "react";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
-import Register from "../../../functions/Register";
+import { UserRegister } from "../../../functions/Auth";
 import { Image } from "expo-image";
 import router from "../../../common/routerHook";
 
@@ -93,7 +93,7 @@ const register = () => {
     const first = firstName;
     const last = lastName;
 
-    const response = await Register(name, email, password, first, last);
+    const response = await UserRegister(name, email, password, first, last);
 
     if (response.status !== 200) {
       console.log(response.status);

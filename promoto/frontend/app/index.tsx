@@ -2,7 +2,7 @@ import { Redirect, Stack } from "expo-router";
 import { useContext, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import "../app.d.ts";
-import { AuthContext } from "../context/AuthContext.tsx";
+import { AuthContext } from "../context/AuthContext";
 
 import { Amplify } from "aws-amplify";
 import awsmobile from "../src/aws-exports";

@@ -1,10 +1,12 @@
 import React, { createContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import GetUser from "../functions/GetUser";
-import SetCookies from "../functions/SetCookies";
+import {
+  UserGetDetails,
+  UserUpdate,
+  UserLoginViaCookies,
+} from "../functions/Auth";
 import { Storage } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
-import UpdateUser from "../functions/UpdateUser";
 
 export const AuthContext = createContext(null);
 
@@ -70,16 +72,16 @@ export const AuthProvider = ({ children }) => {
     if (userId === null) {
       userId = (await getUserInfo()).id;
     }
-    const response = await UpdateUser(imageKey, userId);
+    const response = await UserUpdate(imageKey, userId);
   };
 
   const getUserInfo = async () => {
     const cookie = await AsyncStorage.getItem("userToken");
-    const cookieResponse = await SetCookies(cookie);
+    const cookieResponse = await UserLoginViaCookies(cookie);
 
-    const response = await GetUser();
+    const response = await UserGetDetails();
     if (response.status === 403) {
-      return false;
+      return null;
     }
 
     return response;

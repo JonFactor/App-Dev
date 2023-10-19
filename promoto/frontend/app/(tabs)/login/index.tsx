@@ -6,8 +6,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { useFonts } from "expo-font";
 import { Image } from "expo-image";
 import { AuthContext } from "../../../context/AuthContext";
-import response from "../../../functions/Login";
-import Login from "../../../functions/Login";
+import { UserLogin } from "../../../functions/Auth";
 import router from "../../../common/routerHook";
 
 const LoginPage = () => {
@@ -66,7 +65,7 @@ const LoginPage = () => {
     const email = userEmail;
     const password = userPassword;
 
-    const response = await Login({ email, password });
+    const response = await UserLogin({ email, password });
 
     if (response.status !== 200) {
       setEmailError("Authoritization Failed");
