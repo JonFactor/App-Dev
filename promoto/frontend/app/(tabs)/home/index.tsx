@@ -29,7 +29,7 @@ const home = () => {
     "You wont regret it! 🤔",
   ];
 
-  const randomizedPostMessage = PostMessages[randomInRange(1, 6) - 1];
+  const randomizedPostMessage = PostMessages[randomInRange(0, 4)];
 
   const [userData, setUserData] = useState(null);
   const [currentFilter, setCurrentFilter] = useState([]);

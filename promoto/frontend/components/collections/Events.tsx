@@ -7,7 +7,7 @@ import { EventsGetAll } from "../../functions/Events";
 const Events = (filters, noFilter: boolean) => {
   // pull events from db
 
-  if (!filters === null) {
+  if (filters !== null) {
     filters = filters["filters"];
   }
   const [eventData, setEventData] = useState([]);
@@ -25,7 +25,7 @@ const Events = (filters, noFilter: boolean) => {
   //const [filtersState, setFiltersState] = useState([]);
   //setFiltersState(filters);
   const handleIsFiltered = (eventType: string) => {
-    if (noFilter) {
+    if (noFilter || filters.length < 1) {
       return true;
     }
     const nameMatch = filters.map((value, index) => {
@@ -38,10 +38,6 @@ const Events = (filters, noFilter: boolean) => {
     });
 
     if (nameMatch[0]) {
-      return true;
-    }
-
-    if (filters.length < 1) {
       return true;
     }
 
