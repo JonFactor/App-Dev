@@ -10,7 +10,7 @@ import { UserLogin } from "../../../functions/Auth";
 import router from "../../../common/routerHook";
 
 const LoginPage = () => {
-  const { login } = useContext(AuthContext);
+  const { loginViaCookies, loginViaCredentials } = useContext(AuthContext);
 
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
@@ -19,8 +19,6 @@ const LoginPage = () => {
   const [passwordAttempts, setPasswordAttempts] = useState(0);
 
   const validateUserEntry = () => {
-    const allowedPasswordAttempts = 5;
-
     let emailErrored = true;
     if (!userEmail.includes("@") || userEmail.indexOf(" ") > -1) {
       setEmailError("invalid Email");
@@ -34,8 +32,6 @@ const LoginPage = () => {
     let passwordErrorer = true;
     if (userPassword.indexOf(" ") > -1) {
       setPasswordError("password must not include spaces");
-    } else if (passwordAttempts >= allowedPasswordAttempts) {
-      setPasswordError("too many password attempts, please try again later");
     } else {
       passwordErrorer = false;
       setPasswordError("");
@@ -59,21 +55,24 @@ const LoginPage = () => {
   const handleSignInclick = async () => {
     const isValid = validateUserEntry();
     if (!isValid) {
-      return;
+      const responseOk = await loginViaCookies(null, true);
+      if (responseOk) {
+        return;
+      }
     }
 
     const email = userEmail;
     const password = userPassword;
 
-    const response = await UserLogin({ email, password });
+    const response: Response = await loginViaCredentials(email, password);
 
-    if (response.status !== 200) {
-      setEmailError("Authoritization Failed");
+    if (response === null) {
+      setEmailError("Authoritization Failed, please try again");
       return;
     }
 
     const cookie = response.headers.map["set-cookie"];
-    login(cookie);
+    loginViaCookies(cookie);
 
     router.back();
   };

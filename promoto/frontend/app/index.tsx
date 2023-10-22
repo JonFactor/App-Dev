@@ -9,14 +9,14 @@ import awsmobile from "../src/aws-exports";
 Amplify.configure(awsmobile);
 
 const StartPage = () => {
-  const { isLoading, userToken, getUserInfo } = useContext(AuthContext);
-  const [isNotExpired, setIsNotExpired] = useState(true);
+  const { isLoading, userToken, getUserInfo, isLoggedIn } =
+    useContext(AuthContext);
+  const [isExpired, setIsExpired] = useState(true);
 
-  let cookieNotExpired;
   useEffect(() => {
     const cookieIsNotExpired = async () => {
-      const result = await getUserInfo();
-      setIsNotExpired(result);
+      const result = await isLoggedIn();
+      setIsExpired(!result);
     };
     cookieIsNotExpired();
   }, []);
@@ -29,7 +29,7 @@ const StartPage = () => {
         </View>
       ) : (
         <View>
-          {!isNotExpired ? (
+          {isExpired ? (
             <Redirect href={"/login"} />
           ) : (
             <Redirect href={"/home"} />

@@ -60,7 +60,7 @@ const home = () => {
 
   return (
     <View>
-      <ScrollView className=" mt-12 mx-4 flex">
+      <ScrollView className=" mt-12 mx-2 flex">
         <View className=" flex-row mx-4 ">
           <View className="mt-6">
             <Text className=" text-xl">
