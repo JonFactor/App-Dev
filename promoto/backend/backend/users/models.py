@@ -15,11 +15,6 @@ class User(AbstractUser):
     description = models.CharField(max_length=225, default="nothing to see here")
     favColor = models.CharField(max_length=225, null="black")
     
-    # other users 
-    following = models.ManyToManyField("self",  blank=True)
-    followers = models.ManyToManyField("self", blank=True)
-    blocked = models.ManyToManyField("self", blank=True)
-    
     username = None         # uses none due to login wanting to be handled by email not username
 
     USERNAME_FIELD = 'email' 
@@ -31,3 +26,10 @@ class Group(models.Model):
     description = models.CharField(max_length=225, null="nothing to see here")
     events = models.ManyToManyField("events.Event")
     #participants = models.ManyToManyField("User")
+
+class UserRelationships(models.Model):
+    firstUser = models.ForeignKey("User", on_delete=models.CASCADE, related_name="first")
+    secondUser = models.ForeignKey("User", on_delete=models.CASCADE, related_name="second")
+    isBlocked = models.BooleanField()
+    isFollowed = models.BooleanField()
+    # isMutual = models.BooleanField()

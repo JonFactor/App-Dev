@@ -98,3 +98,17 @@ class LogoutView(APIView):
         }
 
         return response
+
+class RelationshipCreate(APIView):
+    def post(self, request):
+        pass
+    # return nothing | take in user cookies (default), relationship-Type, secondUserId
+
+class FollowingView(APIView):
+    def post(self, request):
+        pass
+    # return a list of all the ids of who the user is following | take in user cookies (defualt)
+class BlockedView(APIView):
+    def post(self, request):
+        pass
+    # return a list of all the id of who the user has blocked | take in user cookies (default)
