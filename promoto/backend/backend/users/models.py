@@ -15,11 +15,6 @@ class User(AbstractUser):
     description = models.CharField(max_length=225, default="nothing to see here")
     favColor = models.CharField(max_length=225, null="black")
     
-    # other users 
-    following = models.ManyToManyField("self",  blank=True)
-    followers = models.ManyToManyField("self", blank=True)
-    blocked = models.ManyToManyField("self", blank=True)
-    
     username = None         # uses none due to login wanting to be handled by email not username
 
     USERNAME_FIELD = 'email' 
