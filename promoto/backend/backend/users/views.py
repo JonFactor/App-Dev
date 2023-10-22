@@ -29,8 +29,6 @@ class LoginViaCookiesView(APIView):
     def post(self, request):
         
         token = request.data['jwt'].split(";")[0]
-        print(token)
-        
         response = Response()
         response.set_cookie(key="jwt", value=token, httponly=True)
 

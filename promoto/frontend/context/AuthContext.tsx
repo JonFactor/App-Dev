@@ -15,6 +15,7 @@ export const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userToken, setUserToken] = useState(null);
+  const [userProfilePic, setUserProfilePic] = useState(null);
 
   const loginViaCredentials = async (
     email: string,
@@ -36,7 +37,9 @@ export const AuthProvider = ({ children }) => {
 
     if (sendToBackend) {
       const cookieResponse = await UserLoginViaCookies(userToken);
-      if (!cookieResponse) {
+      const cookieIsValid = await isLoggedIn();
+      console.log(cookieIsValid);
+      if (!cookieResponse && !cookieIsValid) {
         setIsLoading(false);
         return false;
       }
@@ -64,14 +67,17 @@ export const AuthProvider = ({ children }) => {
   const isLoggedIn = async (): Promise<boolean> => {
     setIsLoading(true);
     let userToken = await AsyncStorage.getItem("userToken");
-    const isLoggedIn = await UserLoginViaCookies(userToken);
+    await UserLoginViaCookies(userToken);
+    const isLoggedIn = await UserGetDetails();
 
-    if (isLoggedIn) {
+    let success = false;
+    if (isLoggedIn !== null) {
+      success = true;
       setUserToken(userToken);
     }
 
     setIsLoading(false);
-    return isLoggedIn;
+    return success;
   };
 
   const fetchImageFromUri = async (uri): Promise<Blob> => {
@@ -83,15 +89,27 @@ export const AuthProvider = ({ children }) => {
 
   const getUserProfilePhoto = async (): Promise<string> => {
     setIsLoading(true);
-    const userInfo = await getUserInfo();
-    if (userInfo === null) {
-      setIsLoading(false);
-      return null;
+    // check of already saved
+    if (userProfilePic !== null) {
+      return userProfilePic;
     }
-    const userPhotoUri = userInfo.profilePic;
 
-    const photo = await Storage.get(userPhotoUri);
+    // check from storage
+    let userPhotoUri = await AsyncStorage.getItem("profilePicKey");
+    if (userPhotoUri === null) {
+      // check from db
+      const userInfo = await getUserInfo();
+      if (userInfo === null) {
+        setIsLoading(false);
+        return null;
+      }
 
+      userPhotoUri = userInfo.profilePic;
+    }
+
+    const photo: string = await Storage.get(userPhotoUri);
+
+    setUserProfilePic(photo);
     setIsLoading(false);
     return photo;
   };
@@ -120,6 +138,9 @@ export const AuthProvider = ({ children }) => {
 
     const userIdConvert: string = userId.toString();
     const responseSuccess = await UserUpdateProfile(imageKey, userIdConvert);
+
+    AsyncStorage.setItem("profilePicKey", imageKey);
+
     setIsLoading(false);
     return responseSuccess;
   };

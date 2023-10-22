@@ -2,6 +2,9 @@ import { Image } from "expo-image";
 import { Tabs } from "expo-router";
 import { StyleSheet, View } from "react-native";
 import { useAssets } from "expo-asset";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import ProfilePictureCard from "../../components/cards/ProfilePictureCard";
 
 export default () => {
   const logoSetting = (imgSrc) => {
@@ -31,8 +34,7 @@ export default () => {
       <Tabs.Screen
         name="profile"
         options={{
-          tabBarIcon: () =>
-            logoSetting(require("../../assets/navbarIcons/profile.png")),
+          tabBarIcon: () => <ProfilePictureCard width={"10"} />,
         }}
       />
       <Tabs.Screen

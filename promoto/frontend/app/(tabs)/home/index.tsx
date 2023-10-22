@@ -13,6 +13,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import groupTypes from "../../../constants/groupTypes";
 import router from "../../../common/routerHook";
+import ProfilePictureCard from "../../../components/cards/ProfilePictureCard";
 
 export const FilterContext = createContext(null);
 
@@ -77,11 +78,7 @@ const home = () => {
             </View>
           </View>
           <View className="flex w-20 aspect-square ml-16 mt-2 ">
-            <Image
-              className="flex-1 rounded-full"
-              source={require("../../../assets/placeholders/jon-vroman.png")}
-              contentFit="cover"
-            />
+            <ProfilePictureCard width={"20"} />
           </View>
         </View>
         <ScrollView

@@ -9,6 +9,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Storage } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
 import { ScrollView } from "react-native";
+import ProfilePictureCard from "../../../components/cards/ProfilePictureCard";
 
 const profile = () => {
   const { logout, getUserInfo, getUserProfilePhoto, setUserProfilePhoto } =
@@ -96,12 +97,7 @@ const profile = () => {
               userProfilePic === null && " bg-gray-400 items-center flex"
             }`}
           >
-            {userProfilePic !== null && (
-              <Image
-                className=" flex-1 rounded-full "
-                source={userProfilePic}
-              />
-            )}
+            {userProfilePic !== null && <ProfilePictureCard width={"24"} />}
           </TouchableOpacity>
           <View className=" mt-2 items-center w-full">
             <Text className=" flex text-3xl font-bold ">{userName}</Text>

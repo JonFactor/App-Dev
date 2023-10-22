@@ -10,7 +10,8 @@ import { UserLogin } from "../../../functions/Auth";
 import router from "../../../common/routerHook";
 
 const LoginPage = () => {
-  const { loginViaCookies, loginViaCredentials } = useContext(AuthContext);
+  const { loginViaCookies, loginViaCredentials, getUserInfo } =
+    useContext(AuthContext);
 
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
@@ -55,7 +56,8 @@ const LoginPage = () => {
   const handleSignInclick = async () => {
     const isValid = validateUserEntry();
     if (!isValid) {
-      const responseOk = await loginViaCookies(null, true);
+      await loginViaCookies(null, true);
+      const responseOk = await getUserInfo();
       if (responseOk) {
         router.back();
         return;
