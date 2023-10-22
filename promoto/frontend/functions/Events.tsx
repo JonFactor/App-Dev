@@ -1,3 +1,12 @@
+export interface IEvent {
+  title: string;
+  ownerId: number;
+  date: string;
+  group: string;
+  location: string;
+  coverImgUri: string;
+}
+
 export const EventCreate = async (
   title: string,
   ownerId: number,
@@ -6,8 +15,8 @@ export const EventCreate = async (
   location: string,
   coverImg: string
   // coverImg: string
-) => {
-  return await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/events`, {
+): Promise<boolean> => {
+  return await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/eventCreate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -19,16 +28,24 @@ export const EventCreate = async (
       group,
       coverImg,
     }),
+  }).then((response) => {
+    if (response.ok) {
+      return true;
+    }
+
+    return false;
   });
 };
 
-interface Event {}
-
-export const EventsGetAll = async () => {
-  return await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/events`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  }).then(async (response) => {
+// might err
+export const EventsGetAll = async (): Promise<Array<IEvent>> => {
+  return await fetch(
+    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/eventCollection`,
+    {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    }
+  ).then(async (response) => {
     if (!response.ok) {
       console.log("EventsGetAllErr: " + response.status);
       return null;
@@ -38,6 +55,16 @@ export const EventsGetAll = async () => {
   });
 };
 
-export const EventsGetDetails = async () => {
-  return await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}`);
+export const EventsGetDetails = async (id: string): Promise<IEvent> => {
+  return await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/eventData`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id }),
+  }).then(async (response) => {
+    if (!response.ok) {
+      console.log("EventGetSingular: " + response.status);
+      return null;
+    }
+    return await response.json();
+  });
 };

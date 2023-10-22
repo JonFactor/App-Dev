@@ -6,15 +6,22 @@ from .models import Event
 
 # Create your views here.
 
-class EventsView(APIView):
+class EventCreationView(APIView):
     def post(self, request):
         serializer = EventSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
     
+class EventSingularGetView(APIView):
+    def post(self, request):
+        requId = request.data['id']
+        event = Event.objects.filter(id = requId).first()
+        serializer = EventSerializer(event, many=False)
+        return Response(data=serializer.data)
+
+class EventCollectionView(APIView):
     def get(self, request):
         events = Event.objects.all()
         serializer = EventSerializer(events, many=True)
         return Response(data=serializer.data)
- 

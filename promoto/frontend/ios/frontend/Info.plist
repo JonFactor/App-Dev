@@ -27,7 +27,7 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>mycoolredirect</string>
+          <string>myapp</string>
           <string>com.anonymous.frontend</string>
         </array>
       </dict>
@@ -63,7 +63,6 @@
     <string>Select and Upload Images</string>
     <key>NSUserActivityTypes</key>
     <array>
-      <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
     </array>
     <key>UILaunchStoryboardName</key>

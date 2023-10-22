@@ -1,15 +1,25 @@
 import { View, Text } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Stack, useSearchParams, useGlobalSearchParams } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import router from "../../../common/routerHook";
+import { EventsGetDetails, IEvent } from "../../../functions/Events";
 
 const eventDetailsPage = () => {
   const { id } = useGlobalSearchParams();
+  const [eventData, setEventData] = useState<IEvent>(null);
 
-  const eventDetails = async () => {
-    // find event in db via id
-  };
+  useEffect(() => {
+    const eventDetails = async () => {
+      const content: IEvent = await EventsGetDetails(id[0]);
+
+      if (content === null) {
+        return;
+      }
+      setEventData(content);
+    };
+    eventDetails();
+  }, []);
 
   return (
     <View>
@@ -22,7 +32,15 @@ const eventDetailsPage = () => {
         >
           <Text>Back</Text>
         </TouchableOpacity>
-        <Text>{id}</Text>
+        {eventData === null ? (
+          <View>
+            <Text>Waiting</Text>
+          </View>
+        ) : (
+          <View>
+            <Text>Data</Text>
+          </View>
+        )}
       </View>
     </View>
   );
