@@ -57,6 +57,7 @@ const LoginPage = () => {
     if (!isValid) {
       const responseOk = await loginViaCookies(null, true);
       if (responseOk) {
+        router.back();
         return;
       }
     }

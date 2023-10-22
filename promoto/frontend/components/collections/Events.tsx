@@ -45,7 +45,7 @@ const Events = (filters, noFilter: boolean) => {
   };
 
   return (
-    <View className="flex h-5/6 ">
+    <View className="flex h-5/6 w-full  ">
       {eventData !== undefined &&
         eventData.map(
           ({ date, group, location, title, id, coverImg }, index) => {
@@ -55,7 +55,7 @@ const Events = (filters, noFilter: boolean) => {
 
             if (isFiltered) {
               return (
-                <View key={index} className=" mt-4">
+                <View key={index} className=" mt-4 w-screen  flex">
                   <EventCard
                     title={title}
                     day={day}

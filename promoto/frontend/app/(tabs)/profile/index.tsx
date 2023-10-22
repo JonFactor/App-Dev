@@ -89,25 +89,29 @@ const profile = () => {
             />
           </View>
         </TouchableOpacity>
-        <View className=" flex">
+        <View className=" w-5/6 flex items-center mt-2">
           <TouchableOpacity
             onPress={handleAddPhotos}
-            className={`flex w-40 rounded-full  aspect-square ml-16 ${
+            className={`flex w-40 rounded-full  aspect-square ${
               userProfilePic === null && " bg-gray-400 items-center flex"
             }`}
           >
-            {userProfilePic === null ? (
-              <Text className=" text-6xl font-semibold  mt-12 ">JF</Text>
-            ) : (
+            {userProfilePic !== null && (
               <Image
                 className=" flex-1 rounded-full "
                 source={userProfilePic}
               />
             )}
           </TouchableOpacity>
+          <View className=" mt-2 items-center w-full">
+            <Text className=" flex text-3xl font-bold ">{userName}</Text>
+            <Text className=" text-md w-5/6 font-semibold text-gray-500 text-center">
+              {userDescription}
+            </Text>
+          </View>
         </View>
         <TouchableOpacity
-          className=" ml-20"
+          className=" ml-2 w-1/6"
           onPress={() => {
             handleDisplayProfileActions();
             logout();
@@ -122,14 +126,8 @@ const profile = () => {
           </View>
         </TouchableOpacity>
       </View>
-      <View className=" w-full flex items-center mt-2">
-        <Text className=" flex text-3xl font-bold ">{userName}</Text>
-        <Text className=" text-md w-5/6 font-semibold text-gray-500 text-center">
-          {userDescription}
-        </Text>
-      </View>
-      <View className=" flex-col mt-4">
-        <View className=" flex-row px-6 mt-4">
+      <View className=" flex-col mt-4 w-full items-center  flex">
+        <View className=" flex-row mt-4">
           <TouchableOpacity
             className=" rounded-full border-[3px] border-light-blue py-2 px-10"
             onPress={handleMessageUser}

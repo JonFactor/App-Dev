@@ -78,7 +78,7 @@ const EventCard = ({
   return (
     <ScrollView
       horizontal
-      className=" h-{22rem} flex"
+      className=" h-{22rem} flex w-full "
       onScrollEndDrag={(event) => {
         const scrollLeft = handleScrollDirectionLeft(event);
 
@@ -90,9 +90,13 @@ const EventCard = ({
       }}
       scrollEventThrottle={16}
     >
-      <Image source={image} contentFit="cover" className="rounded-3xl flex-1">
+      <Image
+        source={image}
+        contentFit="cover"
+        className="rounded-3xl flex-1 w-96 ml-1"
+      >
         <LinearGradient
-          className=" p-4 w-fit h-96 flex-col"
+          className=" p-4 w-full h-96 flex-col"
           colors={["rgba(0,0,0,.15)", "transparent"]}
         >
           <View className=" flex-row">

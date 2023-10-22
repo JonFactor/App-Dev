@@ -56,11 +56,12 @@ const home = () => {
     }
   };
 
-  const handleNewEventClick = () => {};
-
   return (
-    <View>
-      <ScrollView className=" mt-12 mx-2 flex">
+    <View className="w-screen flex">
+      <ScrollView
+        className=" mt-12 mx-4 flex"
+        showsVerticalScrollIndicator={false}
+      >
         <View className=" flex-row mx-4 ">
           <View className="mt-6">
             <Text className=" text-xl">
@@ -75,7 +76,7 @@ const home = () => {
               <Text className="text-3xl font-semibold">Back</Text>
             </View>
           </View>
-          <View className="flex w-20 aspect-square ml-12 mt-2 ">
+          <View className="flex w-20 aspect-square ml-16 mt-2 ">
             <Image
               className="flex-1 rounded-full"
               source={require("../../../assets/placeholders/jon-vroman.png")}
@@ -126,7 +127,7 @@ const home = () => {
           </TouchableOpacity>
           <Text className=" text-2xl mt-2 ml-4">{randomizedPostMessage}</Text>
         </View>
-        <View className="">
+        <View className=" w-full">
           <Events filters={currentFilter} noFilter={false} />
         </View>
       </ScrollView>
