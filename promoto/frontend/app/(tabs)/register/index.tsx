@@ -93,10 +93,16 @@ const register = () => {
     const first = firstName;
     const last = lastName;
 
-    const response = await UserRegister(name, email, password, first, last);
+    const responseOk: boolean = await UserRegister(
+      name,
+      email,
+      password,
+      first,
+      last
+    );
 
-    if (response.status !== 200) {
-      console.log(response.status);
+    if (!responseOk) {
+      setNameErr("Server request failed, please try again.");
       return;
     }
 

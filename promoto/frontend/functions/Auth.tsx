@@ -26,7 +26,10 @@ export const UserGetDetails = async (): Promise<IUser> => {
   });
 };
 
-export const UserLogin = async ({ email, password }): Promise<boolean> => {
+export const UserLogin = async (
+  email: string,
+  password: string
+): Promise<Response> => {
   return await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -37,9 +40,9 @@ export const UserLogin = async ({ email, password }): Promise<boolean> => {
     }),
   }).then((response) => {
     if (response.ok) {
-      return true;
+      return response;
     }
-    return false;
+    return null;
   });
 };
 

@@ -65,10 +65,10 @@ const LoginPage = () => {
     const email = userEmail;
     const password = userPassword;
 
-    const response = await UserLogin({ email, password });
+    const response = await UserLogin(email, password);
 
-    if (response.status !== 200) {
-      setEmailError("Authoritization Failed");
+    if (response === null) {
+      setEmailError("Authoritization Failed, please try again");
       return;
     }
 
