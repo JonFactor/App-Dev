@@ -13,6 +13,7 @@ import router from "../../../common/routerHook";
 import { LinearGradient } from "expo-linear-gradient";
 import ProfilePictureCard from "../../../components/cards/ProfilePictureCard";
 import { AuthContext } from "../../../context/AuthContext";
+import { IUser } from "../../../functions/Auth";
 
 const events = () => {
   const { getUserInfo } = useContext(AuthContext);
@@ -27,8 +28,15 @@ const events = () => {
   );
   const [eventGroup, setEventGroup] = useState([]);
   const [eventLocation, setEventLocation] = useState("");
+  const [eventCoHosts, setEventCoHosts] = useState(Array<IUser>);
   const [eventGuests, setEventGuests] = useState([]);
   const [eventDate, setEventDate] = useState("");
+
+  const [addUserModal, setAddUserModal] = useState(false);
+  const [selectGroupModal, setSelectGroupModal] = useState(false);
+  const [selectEventTypeModal, setSelectEventTypeModal] = useState(false);
+
+  const [userRelation, setUserRelation] = useState("");
 
   const [modalDisplay, setModalDisplay] = useState(false);
   const [modalType, setModalType] = useState("");
@@ -129,32 +137,6 @@ const events = () => {
     router.back();
   };
 
-  const handleGuestsSelect = () => {
-    setModalType("GuestSelect");
-    setModalDisplay(true);
-  };
-
-  const handleGroupSelect = () => {
-    setModalType("GroupSelect");
-    setModalDisplay(true);
-  };
-
-  const handleGroupTypeSelect = (title: string) => {
-    if (!eventGroup.includes(title)) {
-      setEventGroup(() => [...eventGroup, title]);
-    } else {
-      setEventGroup(eventGroup.filter((value) => value === title));
-    }
-  };
-
-  const handleGuestSelect = (name: string) => {
-    if (!eventGuests.includes(name)) {
-      setEventGuests(() => [...eventGuests, name]);
-    } else {
-      setEventGuests(eventGuests.filter((value) => value === name));
-    }
-  };
-
   const unSubmitData = () => {
     if (modalType === "GroupSelect") {
       setEventGroup([]);
@@ -173,6 +155,24 @@ const events = () => {
       return;
     }
     setEventImgs(result.assets[0].uri);
+  };
+
+  const handleAddNewCoHost = () => {
+    setUserRelation("COHOST");
+    setAddUserModal(true);
+  };
+
+  const handleAddNewGuest = () => {
+    setUserRelation("GUEST");
+    setAddUserModal(true);
+  };
+
+  const handleEventTypeAdd = () => {
+    setSelectEventTypeModal(true);
+  };
+
+  const handleGroupSelect = () => {
+    setSelectGroupModal(true);
   };
 
   return (
@@ -244,6 +244,138 @@ const events = () => {
                 <Text className=" text-2xl mt-2 ml-2">{hostName}</Text>
               </View>
               <View className=" w-5/6 bg-light-purple h-2 mt-2" />
+            </View>
+            <View className=" mt-2">
+              <View className=" flex-row">
+                <Text className=" text-2xl text-gray-400 mt-2 mr-4 ml-4">
+                  Co-Hosts
+                </Text>
+                <ScrollView horizontal>
+                  {guestsTemp.map((value: string, index: number) => {
+                    return (
+                      <TouchableOpacity
+                        className=" flex-row ml-2"
+                        onPress={() => {
+                          // remove from list
+                          console.log(index);
+                        }}
+                        key={index}
+                      >
+                        <View className=" flex aspect-square w-12">
+                          <Image
+                            className="flex-1 rounded-full "
+                            contentFit="cover"
+                            source={require("../../../assets/placeholders/NextEventCover.png")}
+                          />
+                        </View>
+                        <Text className=" ml-2 text-xl mt-2">{value}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                  <TouchableOpacity
+                    className=" w-12 aspect-square ml-4 bg-md-blue rounded-full"
+                    onPress={handleAddNewCoHost}
+                  >
+                    <View className=" flex w-8 mt-2 ml-2 rounded-full aspect-square">
+                      <Image
+                        className=" flex-1 rounded-full rotate-45"
+                        contentFit="cover"
+                        source={require("../../../assets/icons/white-cross.svg")}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                </ScrollView>
+              </View>
+              <View className=" w-3/4 bg-light-purple h-2 mt-2" />
+            </View>
+            <View className=" mt-2">
+              <View className=" flex-row">
+                <Text className=" text-2xl text-gray-400 mt-2 mr-12 ml-4">
+                  Guests
+                </Text>
+                <ScrollView horizontal>
+                  {guestsTemp.map((value: string, index: number) => {
+                    return (
+                      <TouchableOpacity
+                        className=" flex-row ml-2"
+                        onPress={() => {
+                          // remove from list
+                          console.log(index);
+                        }}
+                        key={index}
+                      >
+                        <View className=" flex aspect-square w-12">
+                          <Image
+                            className="flex-1 rounded-full "
+                            contentFit="cover"
+                            source={require("../../../assets/placeholders/NextEventCover.png")}
+                          />
+                        </View>
+                        <Text className=" ml-2 text-xl mt-2">{value}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                  <TouchableOpacity
+                    className=" w-12 aspect-square ml-4 bg-md-blue rounded-full"
+                    onPress={handleAddNewGuest}
+                  >
+                    <View className=" flex w-8 mt-2 ml-2 rounded-full aspect-square">
+                      <Image
+                        className=" flex-1 rounded-full rotate-45"
+                        contentFit="cover"
+                        source={require("../../../assets/icons/white-cross.svg")}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                </ScrollView>
+              </View>
+              <View className=" w-3/4 bg-light-purple h-2 mt-2" />
+            </View>
+            <View className=" mt-2 flex">
+              <View className=" flex-row">
+                <Text className=" text-2xl text-gray-400 mt-2 mr-12 ml-4">
+                  Groups
+                </Text>
+                <ScrollView horizontal className=" ml-4">
+                  {/* map group names that are selected */}
+                  <TouchableOpacity
+                    className=" w-12 aspect-square ml-4 bg-md-blue rounded-full"
+                    onPress={handleGroupSelect}
+                  >
+                    <View className=" flex w-8 mt-2 ml-2 rounded-full aspect-square">
+                      <Image
+                        className=" flex-1 rounded-full rotate-45"
+                        contentFit="cover"
+                        source={require("../../../assets/icons/white-cross.svg")}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                </ScrollView>
+              </View>
+              <View className=" w-5/6 bg-light-purple h-2 mt-2" />
+            </View>
+            <View className=" mt-2 flex">
+              <View className=" flex-row">
+                <Text className=" text-2xl text-gray-400 mt-2 mr-12 ml-4">
+                  Type
+                </Text>
+                <ScrollView horizontal className=" ml-10">
+                  {/* map group names that are selected */}
+                  <TouchableOpacity
+                    className=" w-12 aspect-square ml-4 bg-md-blue rounded-full"
+                    onPress={handleEventTypeAdd}
+                  >
+                    <View className=" flex w-8 mt-2 ml-2 rounded-full aspect-square">
+                      <Image
+                        className=" flex-1 rounded-full rotate-45"
+                        contentFit="cover"
+                        source={require("../../../assets/icons/white-cross.svg")}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                </ScrollView>
+              </View>
+              <View className=" w-3/4 bg-light-purple h-2 mt-2" />
             </View>
           </View>
           {}
