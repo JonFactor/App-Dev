@@ -10,12 +10,16 @@ import { Storage } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
 import { ScrollView } from "react-native";
 import ProfilePictureCard from "../../../components/cards/ProfilePictureCard";
+import { IUser, UserViaId } from "../../../functions/Auth";
+import { FindFollowing, IUserToUser } from "../../../functions/Relations";
 
 const profile = () => {
   const { logout, getUserInfo, getUserProfilePhoto, setUserProfilePhoto } =
     useContext(AuthContext);
 
+  const [following, setFollowing] = useState(Array<IUser>);
   const [userProfilePic, setUserProfilePic] = useState(null);
+  const [userEmail, setUserEmail] = useState("");
   const [userName, setUserName] = useState("");
   const [userDescription, setUserDesctiption] = useState("");
   const [navSelected, setNavSelected] = useState(0);
@@ -31,8 +35,21 @@ const profile = () => {
 
       const profilePic = await getUserProfilePhoto();
       setUserProfilePic(profilePic);
+
+      const follows = await FindFollowing(content.email);
+      if (follows === null) {
+        console.log("following nulled");
+      } else {
+        for (let i = 0; i < follows.length; i++) {
+          const user = await UserViaId(follows[i].secondUser.toString());
+          setFollowing((list) => [...list, user]);
+        }
+      }
     };
     loadUser();
+
+    const findFollowing = async () => {};
+    findFollowing();
   }, []);
 
   const handleAddPhotos = async () => {
@@ -177,7 +194,28 @@ const profile = () => {
           ) : navSelected === 1 ? (
             <Text>Groups</Text>
           ) : (
-            <Text>Following</Text>
+            <View className=" mt-4">
+              {following === null || following.map === undefined ? (
+                <View>
+                  <Text>Nothing to see here</Text>
+                </View>
+              ) : (
+                <View>
+                  {following.map((value, index: number) => {
+                    return (
+                      <TouchableOpacity
+                        className=" bg-gray-200 w-full h-20 rounded-full"
+                        key={index}
+                      >
+                        <View>
+                          <Text>{value.name}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              )}
+            </View>
           )}
         </View>
       </View>

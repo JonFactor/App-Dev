@@ -107,3 +107,16 @@ export const UserUpdateProfile = async (
     return false;
   });
 };
+
+export const UserViaId = async (id: string): Promise<IUser> => {
+  return await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/userViaId`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id }),
+  }).then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    return null;
+  });
+};

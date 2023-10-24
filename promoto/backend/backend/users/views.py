@@ -37,6 +37,14 @@ class LoginViaCookiesView(APIView):
         }
         
         return response
+    
+class UserViaIdView(APIView):
+    def post(self, request):
+        id = request.data["id"]
+        
+        user = User.objects.filter(id=id).first()
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
 
 class LoginView(APIView): 
     def post(self, request):
@@ -68,6 +76,7 @@ class LoginView(APIView):
         }
 
         return response
+
 
 
 class UserView(APIView):

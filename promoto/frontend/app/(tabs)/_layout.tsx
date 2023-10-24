@@ -58,6 +58,13 @@ export default () => {
           href: null,
         }}
       />
+      <Tabs.Screen
+        name="group"
+        options={{
+          tabBarStyle: { display: "none" },
+          href: null,
+        }}
+      />
     </Tabs>
   );
 };
