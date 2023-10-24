@@ -1,4 +1,4 @@
-import { View, Text, TextInput, ActivityIndicator } from "react-native";
+import { View, Text, TextInput, ActivityIndicator, Modal } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { Redirect } from "expo-router";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
@@ -14,6 +14,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import ProfilePictureCard from "../../../components/cards/ProfilePictureCard";
 import { AuthContext } from "../../../context/AuthContext";
 import { IUser } from "../../../functions/Auth";
+import GroupSelectionModal from "../../../components/modals/GroupSelection";
+import EventTypeModal from "../../../components/modals/EventTypeModal";
+import AddUserModal from "../../../components/modals/AddUserModal";
 
 const events = () => {
   const { getUserInfo } = useContext(AuthContext);
@@ -28,6 +31,7 @@ const events = () => {
   );
   const [eventGroup, setEventGroup] = useState([]);
   const [eventLocation, setEventLocation] = useState("");
+  const [eventType, setEventType] = useState([]);
   const [eventCoHosts, setEventCoHosts] = useState(Array<IUser>);
   const [eventGuests, setEventGuests] = useState([]);
   const [eventDate, setEventDate] = useState("");
@@ -183,6 +187,33 @@ const events = () => {
         </View>
       ) : (
         <ScrollView className=" mt-14">
+          <Modal visible={addUserModal}>
+            {userRelation === "COHOST" ? (
+              <AddUserModal
+                setter={setAddUserModal}
+                parentSetter={setEventCoHosts}
+              ></AddUserModal>
+            ) : (
+              <AddUserModal
+                setter={setAddUserModal}
+                parentSetter={setEventGuests}
+              ></AddUserModal>
+            )}
+          </Modal>
+          <Modal visible={selectEventTypeModal}>
+            <EventTypeModal
+              setter={setSelectEventTypeModal}
+              parentSetter={setEventType}
+              parentValue={eventType}
+            ></EventTypeModal>
+          </Modal>
+          <Modal visible={selectGroupModal} className=" mt-8 p-2">
+            <GroupSelectionModal
+              setter={setSelectGroupModal}
+              parentSetter={setEventGroup}
+              parentValue={eventGroup}
+            ></GroupSelectionModal>
+          </Modal>
           <View className=" h-72 flex w-full">
             <LinearGradient
               className=" w-full h-full flex"
@@ -333,11 +364,22 @@ const events = () => {
             </View>
             <View className=" mt-2 flex">
               <View className=" flex-row">
-                <Text className=" text-2xl text-gray-400 mt-2 mr-12 ml-4">
+                <Text className=" text-2xl text-gray-400 mt-2 ml-4">
                   Groups
                 </Text>
                 <ScrollView horizontal className=" ml-4">
-                  {/* map group names that are selected */}
+                  <View className=" flex-row mt-1">
+                    {eventGroup.map((value: string, index: number) => {
+                      return (
+                        <TouchableOpacity
+                          className=" px-2 rounded-full h-10 border-2 border-md-blue ml-2"
+                          key={index}
+                        >
+                          <Text className=" text-lg p-1">{value}</Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
                   <TouchableOpacity
                     className=" w-12 aspect-square ml-4 bg-md-blue rounded-full"
                     onPress={handleGroupSelect}
@@ -356,11 +398,24 @@ const events = () => {
             </View>
             <View className=" mt-2 flex">
               <View className=" flex-row">
-                <Text className=" text-2xl text-gray-400 mt-2 mr-12 ml-4">
+                <Text className=" text-2xl text-gray-400 mt-2 mr-8 ml-4">
                   Type
                 </Text>
-                <ScrollView horizontal className=" ml-10">
-                  {/* map group names that are selected */}
+                <ScrollView horizontal className="">
+                  {eventType !== null && (
+                    <View className=" flex-row mt-1">
+                      {eventType.map((value: string, index: number) => {
+                        return (
+                          <TouchableOpacity
+                            className=" px-2 rounded-full h-10 border-2 border-md-purple ml-2"
+                            key={index}
+                          >
+                            <Text className=" text-lg p-1">{value}</Text>
+                          </TouchableOpacity>
+                        );
+                      })}
+                    </View>
+                  )}
                   <TouchableOpacity
                     className=" w-12 aspect-square ml-4 bg-md-blue rounded-full"
                     onPress={handleEventTypeAdd}
