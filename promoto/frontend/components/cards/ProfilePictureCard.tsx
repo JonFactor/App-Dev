@@ -2,17 +2,33 @@ import { View, Text } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { Image } from "expo-image";
 import { AuthContext } from "../../context/AuthContext";
+import { UserViaId } from "../../functions/Auth";
+import { Storage } from "aws-amplify";
 
-const ProfilePictureCard = ({ width }) => {
+const ProfilePictureCard = ({ width, userid = null }) => {
   const { getUserProfilePhoto, isLoading } = useContext(AuthContext);
   const [userProfilePic, setUserProfilePic] = useState(null);
 
   useEffect(() => {
-    const profilePic = async () => {
+    const profilePicSelf = async () => {
       const Profile = await getUserProfilePhoto();
       setUserProfilePic(Profile);
     };
-    profilePic();
+
+    const profilePicOther = async () => {
+      const Profile = await UserViaId(userid);
+      if (Profile === null) {
+        return;
+      }
+
+      const userPhotoUri = Profile.profilePic;
+
+      const photo: string = await Storage.get(userPhotoUri);
+      console.log(photo);
+      setUserProfilePic(photo);
+    };
+    if (userid === null) profilePicSelf();
+    if (userid !== null) profilePicOther();
   }, []);
   return (
     <View className={` flex w-${width} aspect-square`}>

@@ -204,11 +204,17 @@ const profile = () => {
                   {following.map((value, index: number) => {
                     return (
                       <TouchableOpacity
-                        className=" bg-gray-200 w-full h-20 rounded-full"
+                        className=" bg-gray-200 w-full h-20 rounded-full p-2"
                         key={index}
                       >
-                        <View>
-                          <Text>{value.name}</Text>
+                        <View className=" flex-row space-x-8 ">
+                          <ProfilePictureCard width={"12"} userid={value.id} />
+                          <View className=" flex-col ml-4 mt-1">
+                            <Text className=" text-2xl font-semibold">
+                              {value.name}
+                            </Text>
+                            <Text>{value.description}</Text>
+                          </View>
                         </View>
                       </TouchableOpacity>
                     );
