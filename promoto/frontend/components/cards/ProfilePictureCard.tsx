@@ -32,7 +32,7 @@ const ProfilePictureCard = ({ width, userid = null }) => {
   }, []);
   return (
     <View className={` flex w-${width} aspect-square`}>
-      {userProfilePic !== null || isLoading ? (
+      {userProfilePic !== null || !isLoading ? (
         <Image
           className=" flex-1 rounded-full"
           source={userProfilePic}

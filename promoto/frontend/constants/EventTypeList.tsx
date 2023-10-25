@@ -47,6 +47,13 @@ const EventTypeList: Array<IEventType> = [
     mainBgColor: "#5FEAB8",
     secondaryBgColor: "#ADEA5F",
   },
+  {
+    name: "Camps",
+    description:
+      "Want to learn a new skill, while connecting with others? Attend a coding camp.",
+    mainBgColor: "#5FEAB8",
+    secondaryBgColor: "#ADEA5F",
+  },
 ];
 
 export default EventTypeList;

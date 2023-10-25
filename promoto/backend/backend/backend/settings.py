@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "users",
-    "events"
+    "events",
+    "groups"
 ]
 
 MIDDLEWARE = [

@@ -1,11 +1,13 @@
-const groupTypes = [
-  "Sports",
+const GroupTypes = [
+  "Athletics",
   "Gaming",
   "Party",
-  "Bar",
+  "Networking",
   "Music",
   "Theater",
   "Hobby",
+  "Friends-of-Friends",
+  "Lectures",
 ];
 
-export default groupTypes;
+export default GroupTypes;

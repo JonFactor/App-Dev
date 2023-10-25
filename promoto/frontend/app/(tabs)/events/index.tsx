@@ -4,7 +4,6 @@ import { Redirect } from "expo-router";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { Image } from "expo-image";
 import register from "../register";
-import groupTypes from "../../../constants/groupTypes";
 import * as ImagePicker from "expo-image-picker";
 import { EventCreate } from "../../../functions/Events";
 import { Storage } from "aws-amplify";
@@ -106,6 +105,8 @@ const events = () => {
       return;
     }
 
+    console.log("1");
+
     const imageKey = uuidv4();
     const img = await fetchImageFromUri(eventImgs);
 
@@ -183,6 +184,12 @@ const events = () => {
     setEventGroup(eventGroup.filter((item) => item === value));
   };
 
+  useEffect(() => {
+    if (eventDate.length === 2 && eventDate[eventDate.length - 1] != "/") {
+      setEventDate(eventDate + "/");
+    }
+  }, [eventDate]);
+
   return (
     <View className=" bg-gray-200 h-full">
       {isLoading ? (
@@ -242,9 +249,16 @@ const events = () => {
           {}
           <View className=" flex">
             <View className=" mt-4">
+              <View className=" w-full items-center flex">
+                <Text className=" text-2xl text-red-400 flex">{warning}</Text>
+              </View>
               <TextInput
                 className=" text-3xl ml-4"
                 placeholder="Event Title"
+                value={eventTitle}
+                onChangeText={(text) => {
+                  setEventTitle(text);
+                }}
               ></TextInput>
               <View className=" w-5/6 bg-light-purple h-2 mt-4" />
             </View>
@@ -253,6 +267,10 @@ const events = () => {
                 className=" text-2xl ml-4 "
                 placeholder="Description"
                 multiline={true}
+                value={eventDescription}
+                onChangeText={(text) => {
+                  setEventDesctiption(text);
+                }}
               ></TextInput>
               <View className=" w-3/4 bg-light-purple h-2 mt-4" />
             </View>
@@ -261,6 +279,10 @@ const events = () => {
                 className=" text-2xl ml-4 "
                 placeholder="Date"
                 multiline={true}
+                value={eventDate}
+                onChangeText={(text) => {
+                  setEventDate(text);
+                }}
               ></TextInput>
               <View className=" w-3/4 bg-light-purple h-2 mt-2" />
             </View>
@@ -269,6 +291,10 @@ const events = () => {
                 className=" text-2xl ml-4 "
                 placeholder="Location"
                 multiline={true}
+                value={eventLocation}
+                onChangeText={(text) => {
+                  setEventLocation(text);
+                }}
               ></TextInput>
               <View className=" w-3/4 bg-light-purple h-2 mt-2" />
             </View>

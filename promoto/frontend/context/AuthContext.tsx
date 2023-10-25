@@ -80,7 +80,8 @@ export const AuthProvider = ({ children }) => {
     return success;
   };
 
-  const fetchImageFromUri = async (uri): Promise<Blob> => {
+  const fetchImageFromUri = async (uri: string): Promise<Blob> => {
+    console.log(uri);
     const response = await fetch(uri);
     const blob = await response.blob();
 
@@ -120,7 +121,8 @@ export const AuthProvider = ({ children }) => {
   ): Promise<boolean> => {
     setIsLoading(true);
     const imageKey = uuidv4();
-    const img = await fetchImageFromUri(image);
+
+    const img = await fetchImageFromUri(image["assets"][0]["uri"]);
 
     const imageStoreageResult = await Storage.put(imageKey, img, {
       level: "public",
@@ -137,6 +139,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     const userIdConvert: string = userId.toString();
+
     const responseSuccess = await UserUpdateProfile(imageKey, userIdConvert);
 
     AsyncStorage.setItem("profilePicKey", imageKey);

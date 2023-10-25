@@ -4,7 +4,7 @@ import datetime
 # Create your models here.
 
 class Event(models.Model):
-    title = models.CharField(max_length=225)
+    title = models.CharField(max_length=225, unique=True)
     location = models.CharField(max_length=225)
     ownerId = models.IntegerField()
     date = models.DateField(datetime.datetime.now)

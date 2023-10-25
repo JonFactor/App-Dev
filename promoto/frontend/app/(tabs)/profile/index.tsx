@@ -62,7 +62,9 @@ const profile = () => {
       return;
     }
 
-    const userProfilePhoto = setUserProfilePhoto(result);
+    const userProfilePhoto = await setUserProfilePhoto(result);
+    console.log(userProfilePhoto);
+
     const profilePic = await getUserProfilePhoto();
     setUserProfilePic(profilePic);
   };

@@ -11,7 +11,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import Events from "../../../components/collections/Events";
 import { AuthContext } from "../../../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import groupTypes from "../../../constants/groupTypes";
+import groupTypes from "../../../constants/GroupTypes";
 import router from "../../../common/routerHook";
 import ProfilePictureCard from "../../../components/cards/ProfilePictureCard";
 

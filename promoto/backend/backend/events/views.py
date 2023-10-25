@@ -13,7 +13,7 @@ class EventCreationView(APIView):
         serializer.save()
         return Response(serializer.data)
     
-class EventSingularGetView(APIView):
+class EventSingularGetViaIdView(APIView):
     def post(self, request):
         requId = request.data['id']
         event = Event.objects.filter(id = requId).first()
@@ -24,4 +24,11 @@ class EventCollectionView(APIView):
     def get(self, request):
         events = Event.objects.all()
         serializer = EventSerializer(events, many=True)
+        return Response(data=serializer.data)
+    
+class EventSingularGetViaTitleView(APIView):
+    def post(self, request):
+        title = request.data['title']
+        event = Event.objects.filter(title = title).first()
+        serializer = EventSerializer(event)
         return Response(data=serializer.data)
