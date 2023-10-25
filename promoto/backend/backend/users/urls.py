@@ -10,6 +10,6 @@ urlpatterns = [
     path("cookieLogin", LoginViaCookiesView.as_view()),
     path("viewRelationships", RelationshipViewView.as_view()),
     path("createRelationship",RelationshipCreateView.as_view() ),
-    path("userViaId", UserViaIdView.as_view()),
+    path("userViaId", UserViaIdView.as_view())
 ]
  

@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
     if (sendToBackend) {
       const cookieResponse = await UserLoginViaCookies(userToken);
       const cookieIsValid = await isLoggedIn();
-      console.log(cookieIsValid);
+
       if (!cookieResponse && !cookieIsValid) {
         setIsLoading(false);
         return false;
