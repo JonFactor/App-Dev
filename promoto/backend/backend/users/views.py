@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import UserSerializer
-from .models import User
+from .serializers import UserSerializer, UserRelationshipSerializer
+from .models import User, UserRelationships
 import jwt
 import datetime
 # Create your views here.
@@ -37,6 +37,14 @@ class LoginViaCookiesView(APIView):
         }
         
         return response
+    
+class UserViaIdView(APIView):
+    def post(self, request):
+        id = request.data["id"]
+        
+        user = User.objects.filter(id=id).first()
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
 
 class LoginView(APIView): 
     def post(self, request):
@@ -70,6 +78,7 @@ class LoginView(APIView):
         return response
 
 
+
 class UserView(APIView):
     def get(self, request):
         token = request.COOKIES.get('jwt')
@@ -98,3 +107,48 @@ class LogoutView(APIView):
         }
 
         return response
+
+class RelationshipCreateView(APIView):
+    def post(self, request):
+        # secondUserEmail, isBlocked, isFollowed
+        token = request.COOKIES.get('jwt')
+        
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('jwt expired signature')
+
+        user = User.objects.filter(id=payload['id']).first()
+        secondUser = User.objects.filter(email=request.data['secondUserEmail']).first()
+        completeData = {"firstUser": user.id, "secondUser": secondUser.id, "isBlocked": request.data['isBlocked'], "isFollowed": request.data['isFollowed']}
+        
+        serializer = UserRelationshipSerializer(data=completeData)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    # return nothing | take in user cookies (default), relationship-Type, secondUserId
+
+class RelationshipViewView(APIView):
+    def post(self, request):
+        # userEmail, checkFollow, checkBlocked
+        token = request.COOKIES.get('jwt')
+        
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('jwt expired signature')
+
+        user = User.objects.filter(email=request.data['userEmail']).first()
+        
+        if request.data['checkFollow'] == True and request.data['checkBlocked'] == True:
+            listOfFollowing = UserRelationships.objects.filter(firstUser=user.id, isBlocked=True, isFollowed=True)
+        elif request.data['checkFollow'] == True:
+            listOfFollowing = UserRelationships.objects.filter(firstUser=user.id, isFollowed=True)
+        elif request.data['checkBlocked'] == True:
+            listOfFollowing = UserRelationships.objects.filter(firstUser=user.id, isBlocked=True)
+        else:
+            listOfFollowing = UserRelationships.objects.all()
+            
+        serializer = UserRelationshipSerializer(listOfFollowing, many=True)
+        return(Response(data=serializer.data))
+    # return a list of all the ids of who the user is following | take in user cookies (defualt)

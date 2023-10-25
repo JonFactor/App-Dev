@@ -101,6 +101,7 @@ const register = () => {
       last
     );
 
+    console.log(responseOk);
     if (!responseOk) {
       setNameErr("Server request failed, please try again.");
       return;

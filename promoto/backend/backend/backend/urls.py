@@ -22,7 +22,7 @@ urlpatterns = [
     path("api/", include('users.urls')),
     path("api/", include('events.urls'))
 ]
-
+ 
 # when in dev show media files
 from django.conf import settings
 from django.conf.urls.static import static
