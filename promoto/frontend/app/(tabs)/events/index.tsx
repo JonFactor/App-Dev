@@ -14,7 +14,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import ProfilePictureCard from "../../../components/cards/ProfilePictureCard";
 import { AuthContext } from "../../../context/AuthContext";
 import { IUser } from "../../../functions/Auth";
-import GroupSelectionModal from "../../../components/modals/GroupSelection";
+import GroupSelectionModal from "../../../components/modals/GroupSelectionModal";
 import EventTypeModal from "../../../components/modals/EventTypeModal";
 import AddUserModal from "../../../components/modals/AddUserModal";
 
@@ -179,6 +179,10 @@ const events = () => {
     setSelectGroupModal(true);
   };
 
+  const handleETypeItemClick = (value: string) => {
+    setEventGroup(eventGroup.filter((item) => item === value));
+  };
+
   return (
     <View className=" bg-gray-200 h-full">
       {isLoading ? (
@@ -331,7 +335,7 @@ const events = () => {
                         className=" flex-row ml-2"
                         onPress={() => {
                           // remove from list
-                          console.log(index);
+                          console.log(index + 2);
                         }}
                         key={index}
                       >
@@ -374,6 +378,10 @@ const events = () => {
                         <TouchableOpacity
                           className=" px-2 rounded-full h-10 border-2 border-md-blue ml-2"
                           key={index}
+                          onPress={() => {
+                            console.log(value);
+                            handleETypeItemClick(value);
+                          }}
                         >
                           <Text className=" text-lg p-1">{value}</Text>
                         </TouchableOpacity>
