@@ -1,11 +1,38 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
-import React from "react";
-import { Link } from "expo-router";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import { Link, router } from "expo-router";
 import GroupTypes from "../../../constants/GroupTypes";
 import { TextInput } from "react-native-gesture-handler";
 import { Image } from "expo-image";
+import { GetAllGroups, IGroup } from "../../../functions/Groups";
+import { Storage } from "aws-amplify";
+import GroupCard from "../../../components/cards/GroupCard";
 
 const GroupsPage = () => {
+  const [groupData, setGroupData] = useState(Array<IGroup>);
+
+  useEffect(() => {
+    const getGroupData = async () => {
+      const groups = await GetAllGroups();
+      if (groups === null) {
+        return;
+      }
+
+      setGroupData(groups);
+    };
+    getGroupData();
+  }, []);
+
+  const getBackroundImg = async (group: IGroup): Promise<string> => {
+    return await Storage.get(group.image);
+  };
+
   return (
     <ScrollView className=" flex space-y-8 mt-16">
       <View className=" w-full items-center flex ">
@@ -23,13 +50,17 @@ const GroupsPage = () => {
           </View>
         </View>
       </View>
-      {GroupTypes.map((item, index) => {
+      {GroupTypes.map((item: string, index) => {
         return (
           <View className=" mt-4" key={index}>
             <Text className=" ml-12 text-2xl text-gray-500 ">{item}</Text>
             <View>
-              <ScrollView className=" h-24 p-2" horizontal>
-                {}
+              <ScrollView className=" h-40 p-2 flex space-x-6" horizontal>
+                {groupData.map((subItem: IGroup, index: number) => {
+                  if (item === subItem.groupType) {
+                    return <GroupCard key={index} item={subItem}></GroupCard>;
+                  }
+                })}
               </ScrollView>
             </View>
           </View>

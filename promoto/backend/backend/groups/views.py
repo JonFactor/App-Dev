@@ -55,15 +55,18 @@ class CreateGroupView(APIView):
         # title, description, image, owner, groupType
         userId = getUser(request).id
         
-        requestData = {
-            "title": request.data['title'],
-            "description": request.data['description'],
-            "image": request.data["image"],
-            "owner":userId,
-            "groupType": request.data['groupType']
-        }
+        # requestData = {
+        #     "title": request.data.get("title"),#['title'],
+        #     "description": request.data.get("description"),#['description'],
+        #     "image": request.data.get("image"),#["image"],
+        #     "owner":userId,
+        #     "groupType": request.data.get("groupType")#['groupType']
+        # }
         
-        serializer = GroupSerializer(data=requestData)
+        print(request.data)
+        request.data.update({'owner':userId})
+        
+        serializer = GroupSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
@@ -127,6 +130,11 @@ class AddUserToGroupView(APIView):
         serializer.save()
         return Response(serializer)
         
+class GetAllGroupsView(APIView):
+    def get(self, request):
+        groups = Group.objects.all()
+        serializer = GroupSerializer(groups, many=True)
+        return Response(serializer.data)
     
 class RemoveUserFromGroupView(APIView):
     def post(self, request):
@@ -145,3 +153,5 @@ class RemoveUserFromGroupView(APIView):
         userToGroupSerializer.save()
         
         return Response(userToGroupSerializer)
+    
+    
