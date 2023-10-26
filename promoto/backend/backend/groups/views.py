@@ -58,11 +58,11 @@ class CreateGroupView(APIView):
             "title": request.data['title'],
             "desctiption": request.data['description'],
             "image": request.data["image"],
-            "owner": user.data.id,
+            "owner": user.id,
             "groupType": request.data['groupType']
         }
         
-        serializer = GroupSerializer(requestData)
+        serializer = GroupSerializer(data=requestData)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer)

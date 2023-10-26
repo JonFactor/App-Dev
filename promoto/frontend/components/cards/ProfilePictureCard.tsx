@@ -24,7 +24,6 @@ const ProfilePictureCard = ({ width, userid = null }) => {
       const userPhotoUri = Profile.profilePic;
 
       const photo: string = await Storage.get(userPhotoUri);
-      console.log(photo);
       setUserProfilePic(photo);
     };
     if (userid === null) profilePicSelf();

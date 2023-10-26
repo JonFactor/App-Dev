@@ -10,7 +10,8 @@ module.exports = {
   "./app/(tabs)/register/index.tsx",
   "./app/(tabs)/profile/index.tsx",
   "./app/(tabs)/events/index.tsx",
-  "./app/(tabs)/groups/index.tsx"
+  "./app/(tabs)/groups/index.tsx",
+  "./app/(tabs)/createGroup/index.tsx"
 ],
   theme: {
     extend: {
