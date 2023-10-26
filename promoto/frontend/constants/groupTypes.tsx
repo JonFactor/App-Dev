@@ -8,6 +8,7 @@ const GroupTypes = [
   "Hobby",
   "Friends-of-Friends",
   "Lectures",
+  "misc",
 ];
 
 export default GroupTypes;

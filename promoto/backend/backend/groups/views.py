@@ -53,19 +53,20 @@ class AddEventToGroupView(APIView):
 class CreateGroupView(APIView):
     def post(self, request):
         # title, description, image, owner, groupType
-        user = getUser(request)
+        userId = getUser(request).id
+        
         requestData = {
             "title": request.data['title'],
-            "desctiption": request.data['description'],
+            "description": request.data['description'],
             "image": request.data["image"],
-            "owner": user.id,
+            "owner":userId,
             "groupType": request.data['groupType']
         }
         
         serializer = GroupSerializer(data=requestData)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer)
+        return Response(serializer.data)
         
         
 class DeleteGroupView(APIView):
