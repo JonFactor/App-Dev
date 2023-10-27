@@ -1,7 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from events.models import Event
-
 # Create your models here.
 
 
@@ -19,13 +17,6 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'email' 
     REQUIRED_FIELDS = [email, password]
-
-class Group(models.Model):
-    name = models.CharField(max_length=225)
-    creator = models.ForeignKey("User", on_delete=models.CASCADE)
-    description = models.CharField(max_length=225, null="nothing to see here")
-    events = models.ManyToManyField("events.Event")
-    #participants = models.ManyToManyField("User")
 
 class UserRelationships(models.Model):
     firstUser = models.ForeignKey("User", on_delete=models.CASCADE, related_name="first")

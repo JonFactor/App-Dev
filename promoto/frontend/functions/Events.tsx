@@ -9,7 +9,6 @@ export interface IEvent {
 
 export const EventCreate = async (
   title: string,
-  ownerId: number,
   date: string,
   group: string,
   location: string,
@@ -23,7 +22,6 @@ export const EventCreate = async (
     body: JSON.stringify({
       title,
       location,
-      ownerId,
       date,
       group,
       coverImg,
@@ -66,5 +64,36 @@ export const EventsGetDetails = async (id: string): Promise<IEvent> => {
       return null;
     }
     return await response.json();
+  });
+};
+
+export const User2Event = async (
+  viaEmail: boolean,
+  email: string,
+  eventTitle: string,
+  isOwner: boolean,
+  isCoOwner: boolean,
+  isGuest: boolean
+): Promise<boolean> => {
+  return await fetch(
+    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/event2userCreate`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        viaEmail,
+        email,
+        eventTitle,
+        isOwner,
+        isCoOwner,
+        isGuest,
+      }),
+    }
+  ).then((response) => {
+    if (response.ok) {
+      return true;
+    }
+    return false;
   });
 };

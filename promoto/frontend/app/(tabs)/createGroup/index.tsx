@@ -9,7 +9,11 @@ import { Image } from "expo-image";
 import router from "../../../common/routerHook";
 import { AuthContext } from "../../../context/AuthContext";
 import * as ImagePicker from "expo-image-picker";
-import { CreateGroup, IGroup } from "../../../functions/Groups";
+import {
+  AddUserToGroupView,
+  CreateGroup,
+  IGroup,
+} from "../../../functions/Groups";
 import GroupTypeSelectionModal from "../../../components/modals/GroupTypeSelectionModal";
 import { v4 as uuidv4 } from "uuid";
 import { Storage } from "aws-amplify";
@@ -19,19 +23,19 @@ const createGroup = () => {
   const [groupDescription, setGroupDescription] = useState("");
   const [groupImage, setGroupImage] = useState("");
   const [groupType, setGroupType] = useState("");
-  const [groupOwner, setGroupOwner] = useState(0);
+  const [groupOwner, setGroupOwner] = useState("");
   const [groupImageKey, setGroupImageKey] = useState("");
 
   const [showTypeModal, setShowTypeModal] = useState(false);
 
   const [warning, setWarning] = useState("");
 
-  const { getUserInfo, isLoading } = useContext(AuthContext);
+  const { getUserInfo, isLoading, setIsLoading } = useContext(AuthContext);
 
   useEffect(() => {
     const getGroupOwner = async () => {
       const userInfo = await getUserInfo();
-      setGroupOwner(userInfo.id);
+      setGroupOwner(userInfo.email);
     };
     getGroupOwner();
   }, []);
@@ -51,7 +55,9 @@ const createGroup = () => {
   };
 
   const handleGroupSubmit = async () => {
+    setIsLoading(true);
     if (!entryValidation()) {
+      setIsLoading(false);
       return;
     }
 
@@ -62,9 +68,24 @@ const createGroup = () => {
     const groupData = CreateGroup(title, description, image, groupType);
     if (groupData === null) {
       setWarning("Failed to create group, please try again.");
+      setIsLoading(false);
       return;
     }
 
+    const setAsOwner = await AddUserToGroupView(
+      groupOwner,
+      groupTitle,
+      true,
+      false,
+      false,
+      false
+    );
+    if (!setAsOwner) {
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(false);
     router.back();
   };
 
@@ -109,7 +130,10 @@ const createGroup = () => {
     <View>
       {isLoading ? (
         <View>
-          <ActivityIndicator size={"large"}></ActivityIndicator>
+          <ActivityIndicator
+            size={"large"}
+            className=" mt-52"
+          ></ActivityIndicator>
         </View>
       ) : (
         <View>

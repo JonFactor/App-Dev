@@ -84,7 +84,7 @@ const home = () => {
               <Text className="text-3xl font-semibold">Back</Text>
             </View>
           </View>
-          <View className="flex w-20 aspect-square ml-16 mt-2 ">
+          <View className="flex w-20 aspect-square ml-[14%] mt-2 ">
             <ProfilePictureCard width={"20"} />
           </View>
         </View>

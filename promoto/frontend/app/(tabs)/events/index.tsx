@@ -32,7 +32,7 @@ const events = () => {
   const [eventLocation, setEventLocation] = useState("");
   const [eventType, setEventType] = useState([]);
   const [eventCoHosts, setEventCoHosts] = useState(Array<IUser>);
-  const [eventGuests, setEventGuests] = useState([]);
+  const [eventGuests, setEventGuests] = useState(Array<IUser>);
   const [eventDate, setEventDate] = useState("");
 
   const [addUserModal, setAddUserModal] = useState(false);
@@ -57,14 +57,6 @@ const events = () => {
     };
     getUserData();
   }, []);
-
-  const guestsTemp = [
-    " Jon Fac",
-    "becky Neck",
-    "trecky Fec",
-    "woah Shoe",
-    "foe Doe",
-  ];
 
   const validateEventEntries = () => {
     if (eventTitle === "") {
@@ -122,7 +114,6 @@ const events = () => {
 
     const responseOk = await EventCreate(
       eventTitle,
-      ownerId,
       date,
       catigory,
       eventLocation,
@@ -203,11 +194,15 @@ const events = () => {
               <AddUserModal
                 setter={setAddUserModal}
                 parentSetter={setEventCoHosts}
+                parentValue={eventCoHosts}
+                isGuests={false}
               ></AddUserModal>
             ) : (
               <AddUserModal
                 setter={setAddUserModal}
                 parentSetter={setEventGuests}
+                parentValue={eventGuests}
+                isGuests={true}
               ></AddUserModal>
             )}
           </Modal>
@@ -312,7 +307,7 @@ const events = () => {
                   Co-Hosts
                 </Text>
                 <ScrollView horizontal>
-                  {guestsTemp.map((value: string, index: number) => {
+                  {eventCoHosts.map((value: IUser, index: number) => {
                     return (
                       <TouchableOpacity
                         className=" flex-row ml-2"
@@ -329,7 +324,7 @@ const events = () => {
                             source={require("../../../assets/placeholders/NextEventCover.png")}
                           />
                         </View>
-                        <Text className=" ml-2 text-xl mt-2">{value}</Text>
+                        <Text className=" ml-2 text-xl mt-2">{value.name}</Text>
                       </TouchableOpacity>
                     );
                   })}
@@ -355,7 +350,7 @@ const events = () => {
                   Guests
                 </Text>
                 <ScrollView horizontal>
-                  {guestsTemp.map((value: string, index: number) => {
+                  {eventGuests.map((value: IUser, index: number) => {
                     return (
                       <TouchableOpacity
                         className=" flex-row ml-2"
@@ -372,7 +367,7 @@ const events = () => {
                             source={require("../../../assets/placeholders/NextEventCover.png")}
                           />
                         </View>
-                        <Text className=" ml-2 text-xl mt-2">{value}</Text>
+                        <Text className=" ml-2 text-xl mt-2">{value.name}</Text>
                       </TouchableOpacity>
                     );
                   })}

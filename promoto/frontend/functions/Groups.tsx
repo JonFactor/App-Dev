@@ -37,3 +37,27 @@ export const GetAllGroups = async (): Promise<Array<IGroup>> => {
     return await response.json();
   });
 };
+
+export const AddUserToGroupView = async (
+  email: string,
+  title: string,
+  owner: boolean,
+  coowner: boolean,
+  member: boolean,
+  blocked: boolean
+): Promise<boolean> => {
+  return await fetch(
+    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/addUserToGroup`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ email, title, owner, coowner, member, blocked }),
+    }
+  ).then((response) => {
+    if (response.ok) {
+      return true;
+    }
+    return false;
+  });
+};

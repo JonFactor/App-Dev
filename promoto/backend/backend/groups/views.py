@@ -14,17 +14,17 @@ import datetime
 # Create your views here.
 
 def getUser(request):
-        token = request.COOKIES.get('jwt')
+    token = request.COOKIES.get('jwt')
 
-        if not token:
-            raise AuthenticationFailed('Unauthenticated')
+    if not token:
+        raise AuthenticationFailed('Unauthenticated')
 
-        try:
-            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('jwt expired signature')
+    try:
+        payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+    except jwt.ExpiredSignatureError:
+        raise AuthenticationFailed('jwt expired signature')
 
-        return User.objects.filter(id=payload['id']).first()
+    return User.objects.filter(id=payload['id']).first()
 
 class AddEventToGroupView(APIView):
     def post(self, request):
@@ -103,18 +103,18 @@ class GetGroupViaUserView(APIView):
 
 class AddUserToGroupView(APIView):
     def post(self, request):
-        email = request.data['email']
-        title = request.data['title']
-        isOwner = request.data['owner']
-        isCoOwner = request.data['coowner']
-        isMember = request.data['member']
-        isBlocked = request.data['blocked']
+        email = request.data.get('email')
+        title = request.data.get('title')
+        isOwner = request.data.get('owner')
+        isCoOwner = request.data.get('coowner')
+        isMember = request.data.get('member')
+        isBlocked = request.data.get('blocked')
         
         userRaw = User.objects.filter(email=email).first()
-        userId = UserSerializer(userRaw).data.id
+        userId = UserSerializer(userRaw).data.get("id")
         
         groupRaw = Group.objects.filter(title=title).first()
-        groupId = GroupSerializer(groupRaw).data.id
+        groupId = GroupSerializer(groupRaw).data.get("id")
         
         requData = {
             "user": userId,
@@ -125,7 +125,18 @@ class AddUserToGroupView(APIView):
             "isBlocked": isBlocked
         }
         
-        serializer = User2GroupSerialzier(requData)
+        request.data.update({"user":userId})
+        request.data.update({"group":groupId})
+        
+# empty the dictionary d
+        finalDict = {}
+        # eliminate the unrequired element
+        for key, value in request.data.items():
+            if key != 'title' or key != '':
+                finalDict[key] = value
+                print(finalDict)
+        
+        serializer = User2GroupSerialzier(data=finalDict)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer)
