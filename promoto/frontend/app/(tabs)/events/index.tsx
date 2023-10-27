@@ -176,7 +176,10 @@ const events = () => {
   };
 
   useEffect(() => {
-    if (eventDate.length === 2 && eventDate[eventDate.length - 1] != "/") {
+    if (
+      (eventDate.length === 2 || eventDate.length === 5) &&
+      eventDate[eventDate.length - 1] != "/"
+    ) {
       setEventDate(eventDate + "/");
     }
   }, [eventDate]);

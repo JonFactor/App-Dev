@@ -65,22 +65,28 @@ const createGroup = () => {
     const description = groupDescription;
     const image = groupImageKey;
 
-    const groupData = CreateGroup(title, description, image, groupType);
+    const groupData = await CreateGroup(
+      title,
+      description,
+      image,
+      groupType
+    ).then(async () => {
+      const setAsOwner = await AddUserToGroupView(
+        groupOwner,
+        groupTitle,
+        true,
+        false,
+        false,
+        false
+      );
+
+      if (!setAsOwner) {
+        setIsLoading(false);
+        return;
+      }
+    });
     if (groupData === null) {
       setWarning("Failed to create group, please try again.");
-      setIsLoading(false);
-      return;
-    }
-
-    const setAsOwner = await AddUserToGroupView(
-      groupOwner,
-      groupTitle,
-      true,
-      false,
-      false,
-      false
-    );
-    if (!setAsOwner) {
       setIsLoading(false);
       return;
     }

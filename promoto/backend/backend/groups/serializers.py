@@ -14,4 +14,4 @@ class User2GroupSerialzier(serializers.ModelSerializer):
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = ['title', 'description', 'image', 'owner', 'groupType']
+        fields = ['id', 'title', 'description', 'image', 'owner', 'groupType']

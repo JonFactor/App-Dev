@@ -103,43 +103,29 @@ class GetGroupViaUserView(APIView):
 
 class AddUserToGroupView(APIView):
     def post(self, request):
-        email = request.data.get('email')
-        title = request.data.get('title')
-        isOwner = request.data.get('owner')
-        isCoOwner = request.data.get('coowner')
-        isMember = request.data.get('member')
-        isBlocked = request.data.get('blocked')
+        user = request.data.get('email')
+        group = request.data.get('title')
         
-        userRaw = User.objects.filter(email=email).first()
-        userId = UserSerializer(userRaw).data.get("id")
+        userRaw = User.objects.filter(email=user).first()
+        userData = UserSerializer(userRaw).data
+        userId = userData.get("id")
         
-        groupRaw = Group.objects.filter(title=title).first()
-        groupId = GroupSerializer(groupRaw).data.get("id")
-        
-        requData = {
-            "user": userId,
-            "group": groupId,
-            "isOwner": isOwner,
-            "isCoOwner": isCoOwner,
-            "isMember": isMember,
-            "isBlocked": isBlocked
-        }
+        groupRaw = Group.objects.filter(title=group).first()
+        group = GroupSerializer(groupRaw)
+        groupId = group.data.get("id")
         
         request.data.update({"user":userId})
         request.data.update({"group":groupId})
         
-# empty the dictionary d
-        finalDict = {}
-        # eliminate the unrequired element
-        for key, value in request.data.items():
-            if key != 'title' or key != '':
-                finalDict[key] = value
-                print(finalDict)
+        request.data.pop("title")
+        request.data.pop("email")
         
-        serializer = User2GroupSerialzier(data=finalDict)
+        print(request.data)
+        
+        serializer = User2GroupSerialzier(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer)
+        return Response(serializer.data)
         
 class GetAllGroupsView(APIView):
     def get(self, request):

@@ -41,10 +41,10 @@ export const GetAllGroups = async (): Promise<Array<IGroup>> => {
 export const AddUserToGroupView = async (
   email: string,
   title: string,
-  owner: boolean,
-  coowner: boolean,
-  member: boolean,
-  blocked: boolean
+  isOwner: boolean,
+  isCoOwner: boolean,
+  isMember: boolean,
+  isBanned: boolean
 ): Promise<boolean> => {
   return await fetch(
     `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/addUserToGroup`,
@@ -52,7 +52,14 @@ export const AddUserToGroupView = async (
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ email, title, owner, coowner, member, blocked }),
+      body: JSON.stringify({
+        email,
+        title,
+        isOwner,
+        isCoOwner,
+        isMember,
+        isBanned,
+      }),
     }
   ).then((response) => {
     if (response.ok) {
