@@ -12,7 +12,8 @@ export const EventCreate = async (
   date: string,
   group: string,
   location: string,
-  coverImg: string
+  coverImg: string,
+  eventGroup: string
   // coverImg: string
 ): Promise<boolean> => {
   return await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/eventCreate`, {
@@ -25,6 +26,7 @@ export const EventCreate = async (
       date,
       group,
       coverImg,
+      eventGroup,
     }),
   }).then((response) => {
     if (response.ok) {

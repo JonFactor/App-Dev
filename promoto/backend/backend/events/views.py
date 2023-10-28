@@ -7,6 +7,7 @@ from .models import Event
 from users.models import User
 import jwt
 from django.views.decorators.csrf import csrf_exempt
+from groups.models import Group
 
 # Create your views here.
 
@@ -28,7 +29,14 @@ class EventCreationView(APIView):
     @csrf_exempt
     def post(self, request):
         userId = getUser(request).id
-        request.data.update({"owner":userId})        
+        request.data.update({"owner":userId})   
+        
+        eventGroupName = request.data.get('eventGroup')
+        eventGroup = Group.objects.filter(title = eventGroupName).first()
+        eventGroupId = eventGroup.id
+        
+        request.data.pop("eventGroup")
+        request.data.update({"eventGroup": eventGroupId})
         
         serializer = EventSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

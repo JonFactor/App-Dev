@@ -10,17 +10,17 @@ import { Image } from "expo-image";
 import GroupCard from "../cards/GroupCard";
 
 const GroupSelectionModal = ({ setter, parentSetter, parentValue }) => {
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState(null);
   const [userGroups, setUserGroups] = useState([]);
+
   const GroupSelection = (value, index) => {
-    if (selectedItems.includes(index)) {
-      parentSetter(parentValue.filter((i) => i === value));
-      //setSelectedItems(selectedItems.filter((i) => i === value));
+    if (selectedItems === index) {
+      parentSetter(null);
+      setSelectedItems(null);
       return;
     }
-    console.log(value);
-    // parentSetter([...parentValue, value]);
-    setSelectedItems([...selectedItems, index]);
+    parentSetter(value);
+    setSelectedItems(index);
   };
 
   useEffect(() => {
@@ -29,7 +29,9 @@ const GroupSelectionModal = ({ setter, parentSetter, parentValue }) => {
 
       setUserGroups(groups);
     };
+
     loadGroups();
+    setSelectedItems(parentValue);
   }, []);
 
   return (
@@ -46,9 +48,9 @@ const GroupSelectionModal = ({ setter, parentSetter, parentValue }) => {
                   <TouchableOpacity
                     key={index}
                     className=" mt-4 flex items-center"
-                    onPress={() => GroupSelection(value, index)}
+                    onPress={() => GroupSelection(value.title, index)}
                   >
-                    {selectedItems.includes(index) && (
+                    {selectedItems === index && (
                       <Text className=" text-2xl font-semibold text-green-500">
                         Selected
                       </Text>

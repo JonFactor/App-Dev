@@ -5,7 +5,7 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { Image } from "expo-image";
 import register from "../register";
 import * as ImagePicker from "expo-image-picker";
-import { EventCreate } from "../../../functions/Events";
+import { EventCreate, User2Event } from "../../../functions/Events";
 import { Storage } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
 import router from "../../../common/routerHook";
@@ -17,6 +17,7 @@ import GroupSelectionModal from "../../../components/modals/GroupSelectionModal"
 import EventTypeModal from "../../../components/modals/EventTypeModal";
 import AddUserModal from "../../../components/modals/AddUserModal";
 import { IGroup } from "../../../functions/Groups";
+import ProfileHorizontal from "../../../components/cards/ProfileHorizontal";
 
 const events = () => {
   const { getUserInfo } = useContext(AuthContext);
@@ -29,7 +30,7 @@ const events = () => {
   const [eventImgs, setEventImgs] = useState(
     require("../../../assets/placeholders/NextEventCover.png")
   );
-  const [eventGroup, setEventGroup] = useState(Array<IGroup>);
+  const [eventGroupId, setEventGroupId] = useState(null);
   const [eventLocation, setEventLocation] = useState("");
   const [eventType, setEventType] = useState([]);
   const [eventCoHosts, setEventCoHosts] = useState(Array<IUser>);
@@ -69,8 +70,8 @@ const events = () => {
     } else if (eventImgs === null) {
       // setWarning("Background required");
       // return false;
-    } else if (eventGroup === null) {
-      setEventGroup(["misc"]);
+    } else if (eventGroupId === null) {
+      setEventGroupId(null);
     } else if (eventLocation === null) {
       setWarning("Location is required");
       return false;
@@ -98,48 +99,83 @@ const events = () => {
       return;
     }
 
-    console.log("1");
-
     const imageKey = uuidv4();
+
     const img = await fetchImageFromUri(eventImgs);
+
+    console.log("1");
 
     const imageStoreageResult = await Storage.put(imageKey, img, {
       level: "public",
       contentType: img.type,
     });
 
-    const ownerId = 1;
     let dateList = eventDate.split("/");
     const date = `${dateList[2]}-${dateList[1]}-${dateList[0]}`;
-    const catigory = eventGroup.join(", ");
-
+    const catigory = eventType.join(", ");
+    const group = eventGroupId.toString();
     const responseOk = await EventCreate(
       eventTitle,
       date,
       catigory,
       eventLocation,
-      imageKey
+      imageKey,
+      group
     );
 
-    if (responseOk) {
+    if (!responseOk) {
       setIsLoading(false);
-      router.back();
       return;
     }
 
+    // const ownerEventOk = await User2Event(
+    //   false,
+    //   "",
+    //   eventTitle,
+    //   true,
+    //   false,
+    //   false
+    // );
+    // if (!ownerEventOk) {
+    //   setIsLoading(false);
+    //   return;
+    // }
+
+    // for (let i = 0; i < eventCoHosts.length; i++) {
+    //   const resultOk = User2Event(
+    //     true,
+    //     eventCoHosts[i].email,
+    //     eventTitle,
+    //     false,
+    //     true,
+    //     false
+    //   );
+    //   if (!resultOk) {
+    //     setIsLoading(false);
+    //     return;
+    //   }
+    // }
+    // for (let i = 0; i < eventGuests.length; i++) {
+    //   const resultOk = User2Event(
+    //     true,
+    //     eventGuests[i].email,
+    //     eventTitle,
+    //     false,
+    //     false,
+    //     true
+    //   );
+    //   if (!resultOk) {
+    //     setIsLoading(false);
+    //     return;
+    //   }
+    // }
+
+    router.back();
     setIsLoading(false);
   };
 
   const handleEventBack = () => {
     router.back();
-  };
-
-  const unSubmitData = () => {
-    if (modalType === "GroupSelect") {
-      setEventGroup([]);
-    } else {
-      setEventGuests([]);
-    }
   };
 
   const handleAddPhoto = async () => {
@@ -173,7 +209,7 @@ const events = () => {
   };
 
   const handleETypeItemClick = (value: string) => {
-    setEventGroup(eventGroup.filter((item) => item === value));
+    setEventGroupId(null);
   };
 
   useEffect(() => {
@@ -220,8 +256,8 @@ const events = () => {
           <Modal visible={selectGroupModal} className=" mt-8 p-2">
             <GroupSelectionModal
               setter={setSelectGroupModal}
-              parentSetter={setEventGroup}
-              parentValue={eventGroup}
+              parentSetter={setEventGroupId}
+              parentValue={eventGroupId}
             ></GroupSelectionModal>
           </Modal>
           <View className=" h-72 flex w-full">
@@ -313,23 +349,9 @@ const events = () => {
                 <ScrollView horizontal>
                   {eventCoHosts.map((value: IUser, index: number) => {
                     return (
-                      <TouchableOpacity
-                        className=" flex-row ml-2"
-                        onPress={() => {
-                          // remove from list
-                          console.log(index);
-                        }}
-                        key={index}
-                      >
-                        <View className=" flex aspect-square w-12">
-                          <Image
-                            className="flex-1 rounded-full "
-                            contentFit="cover"
-                            source={require("../../../assets/placeholders/NextEventCover.png")}
-                          />
-                        </View>
-                        <Text className=" ml-2 text-xl mt-2">{value.name}</Text>
-                      </TouchableOpacity>
+                      <View key={index}>
+                        <ProfileHorizontal profile={value}></ProfileHorizontal>
+                      </View>
                     );
                   })}
                   <TouchableOpacity
@@ -356,23 +378,9 @@ const events = () => {
                 <ScrollView horizontal>
                   {eventGuests.map((value: IUser, index: number) => {
                     return (
-                      <TouchableOpacity
-                        className=" flex-row ml-2"
-                        onPress={() => {
-                          // remove from list
-                          console.log(index + 2);
-                        }}
-                        key={index}
-                      >
-                        <View className=" flex aspect-square w-12">
-                          <Image
-                            className="flex-1 rounded-full "
-                            contentFit="cover"
-                            source={require("../../../assets/placeholders/NextEventCover.png")}
-                          />
-                        </View>
-                        <Text className=" ml-2 text-xl mt-2">{value.name}</Text>
-                      </TouchableOpacity>
+                      <View key={index}>
+                        <ProfileHorizontal profile={value}></ProfileHorizontal>
+                      </View>
                     );
                   })}
                   <TouchableOpacity
@@ -393,25 +401,14 @@ const events = () => {
             </View>
             <View className=" mt-2 flex">
               <View className=" flex-row">
-                <Text className=" text-2xl text-gray-400 mt-2 ml-4">
-                  Groups
-                </Text>
+                <Text className=" text-2xl text-gray-400 mt-2 ml-4">Group</Text>
                 <ScrollView horizontal className=" ml-4">
                   <View className=" flex-row mt-1">
-                    {eventGroup.map((value: string, index: number) => {
-                      return (
-                        <TouchableOpacity
-                          className=" px-2 rounded-full h-10 border-2 border-md-blue ml-2"
-                          key={index}
-                          onPress={() => {
-                            console.log(value);
-                            handleETypeItemClick(value);
-                          }}
-                        >
-                          <Text className=" text-lg p-1">{value}</Text>
-                        </TouchableOpacity>
-                      );
-                    })}
+                    {eventGroupId !== null && (
+                      <TouchableOpacity className=" px-2 rounded-full h-10 border-2 border-md-blue ml-2">
+                        <Text className=" text-lg p-1">{eventGroupId}</Text>
+                      </TouchableOpacity>
+                    )}
                   </View>
                   <TouchableOpacity
                     className=" w-12 aspect-square ml-4 bg-md-blue rounded-full"
@@ -493,6 +490,7 @@ const events = () => {
               </View>
             </TouchableOpacity>
           </View>
+          <View className=" h-20 w-2" />
         </ScrollView>
       )}
     </View>

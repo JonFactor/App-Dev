@@ -9,6 +9,7 @@ import {
 } from "../functions/Auth";
 import { Storage } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
+import LoadingScreen from "../components/modals/LoadingScreen";
 
 export const AuthContext = createContext(null);
 
@@ -166,7 +167,6 @@ export const AuthProvider = ({ children }) => {
         loginViaCredentials,
         logout,
         isLoading,
-        userToken,
         getUserInfo,
         getUserProfilePhoto,
         setUserProfilePhoto,

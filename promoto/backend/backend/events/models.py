@@ -9,6 +9,7 @@ class Event(models.Model):
     owner = models.ForeignKey("users.User", on_delete=models.CASCADE, default=1)
     date = models.DateField(datetime.datetime.now)
     eventType = models.CharField(max_length=225, null="misc")
+    eventGroup = models.ForeignKey("groups.Group", on_delete=models.CASCADE, default=None)
     coverImg = models.CharField(max_length=225, default="test.png")
 
 class User2Event(models.Model):
