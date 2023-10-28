@@ -5,7 +5,7 @@ import { router } from "expo-router";
 import { Image } from "expo-image";
 import { Storage } from "aws-amplify";
 
-const GroupCard = ({ item }) => {
+const GroupCard = ({ item, routingIgnore }) => {
   const [image, setImage] = useState(null);
 
   useEffect(() => {
@@ -20,12 +20,17 @@ const GroupCard = ({ item }) => {
     };
     setImg();
   }, []);
+
+  const handleGroupSelect = () => {
+    if (routingIgnore !== "True") {
+      router.push(`groups/${item.title}`);
+    }
+  };
+
   return (
     <TouchableOpacity
       className=" w-52 h-36 rounded-xl flex ml-4"
-      onPress={() => {
-        router.push(`groups/${item.title}`);
-      }}
+      onPress={handleGroupSelect}
     >
       <View className=" flex w-full h-full">
         <Image

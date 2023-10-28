@@ -68,3 +68,19 @@ export const AddUserToGroupView = async (
     return false;
   });
 };
+
+export const GetGroupsViaUser = async (): Promise<Array<IGroup>> => {
+  return await fetch(
+    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/getGroupViaUser`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    }
+  ).then(async (response) => {
+    if (response.ok) {
+      return await response.json();
+    }
+    return null;
+  });
+};

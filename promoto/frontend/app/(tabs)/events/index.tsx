@@ -16,6 +16,7 @@ import { IUser } from "../../../functions/Auth";
 import GroupSelectionModal from "../../../components/modals/GroupSelectionModal";
 import EventTypeModal from "../../../components/modals/EventTypeModal";
 import AddUserModal from "../../../components/modals/AddUserModal";
+import { IGroup } from "../../../functions/Groups";
 
 const events = () => {
   const { getUserInfo } = useContext(AuthContext);
@@ -28,7 +29,7 @@ const events = () => {
   const [eventImgs, setEventImgs] = useState(
     require("../../../assets/placeholders/NextEventCover.png")
   );
-  const [eventGroup, setEventGroup] = useState([]);
+  const [eventGroup, setEventGroup] = useState(Array<IGroup>);
   const [eventLocation, setEventLocation] = useState("");
   const [eventType, setEventType] = useState([]);
   const [eventCoHosts, setEventCoHosts] = useState(Array<IUser>);
@@ -258,7 +259,7 @@ const events = () => {
                   setEventTitle(text);
                 }}
               ></TextInput>
-              <View className=" w-5/6 bg-light-purple h-2 mt-4" />
+              <View className=" w-3/4 bg-light-purple h-2 mt-4 " />
             </View>
             <View className=" mt-4">
               <TextInput
@@ -302,7 +303,7 @@ const events = () => {
                 <ProfilePictureCard width={"12"} />
                 <Text className=" text-2xl mt-2 ml-2">{hostName}</Text>
               </View>
-              <View className=" w-5/6 bg-light-purple h-2 mt-2" />
+              <View className=" w-3/4 bg-light-purple h-2 mt-2" />
             </View>
             <View className=" mt-2">
               <View className=" flex-row">
@@ -426,7 +427,7 @@ const events = () => {
                   </TouchableOpacity>
                 </ScrollView>
               </View>
-              <View className=" w-5/6 bg-light-purple h-2 mt-2" />
+              <View className=" w-3/4 bg-light-purple h-2 mt-2" />
             </View>
             <View className=" mt-2 flex">
               <View className=" flex-row">

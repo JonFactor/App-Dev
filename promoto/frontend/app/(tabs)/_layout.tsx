@@ -5,7 +5,6 @@ import { useAssets } from "expo-asset";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import ProfilePictureCard from "../../components/cards/ProfilePictureCard";
-
 export default () => {
   const logoSetting = (imgSrc) => {
     return (
@@ -25,7 +24,7 @@ export default () => {
         }}
       />
       <Tabs.Screen
-        name="groups"
+        name="discover"
         options={{
           tabBarIcon: () =>
             logoSetting(require("../../assets/navbarIcons/groups.png")),

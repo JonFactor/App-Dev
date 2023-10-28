@@ -98,8 +98,18 @@ class GetGroupDataView(APIView):
     
 class GetGroupViaUserView(APIView):
     def post(self, request):
-        user = getUser(request)
-        #todo
+        user = getUser(request).id
+
+        groups = User2Group.objects.filter(user=user)   
+        ids = []
+        for g in groups:
+            ids.append(g.id)
+            
+        print(ids)
+        groupsfilter = Group.objects.filter(id__in=ids)
+        serializer = GroupSerializer(groupsfilter, many=True)
+        
+        return Response(serializer.data)
 
 class AddUserToGroupView(APIView):
     def post(self, request):
@@ -119,8 +129,6 @@ class AddUserToGroupView(APIView):
         
         request.data.pop("title")
         request.data.pop("email")
-        
-        print(request.data)
         
         serializer = User2GroupSerialzier(data=request.data)
         serializer.is_valid(raise_exception=True)
