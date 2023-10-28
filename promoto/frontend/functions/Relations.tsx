@@ -29,3 +29,14 @@ export const FindFollowing = async (
     }
   });
 };
+
+export const CreateFollowing = async (): Promise<boolean> => {
+  return await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/`, {}).then(
+    (response) => {
+      if (response.ok) {
+        return true;
+      }
+      return false;
+    }
+  );
+};

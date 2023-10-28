@@ -174,7 +174,8 @@ const LoginPage = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <View className=" flex w-full h-52 mt-24">
+      <View className=" bg-white w-2 h-[4%]" />
+      <View className=" flex w-full h-52">
         <Image
           source={require("../../../assets/login/bottomGraphic.svg")}
           contentFit="cover"

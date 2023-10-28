@@ -171,6 +171,7 @@ export const AuthProvider = ({ children }) => {
         getUserProfilePhoto,
         setUserProfilePhoto,
         isLoggedIn,
+        setIsLoading,
       }}
     >
       {children}

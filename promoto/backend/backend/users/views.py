@@ -11,6 +11,10 @@ import datetime
 
 class RegisterView(APIView):
     def post(self, request):
+        
+        request.data.update({"description":"nothing to see here"})
+        request.data.update({"profilePic":"http://www.gravatar.com/avatar"})
+        print(request.data)
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()

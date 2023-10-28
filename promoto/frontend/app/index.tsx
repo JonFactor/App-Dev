@@ -25,7 +25,7 @@ const StartPage = () => {
     <View>
       {isLoading ? (
         <View className=" flex-1 justify-items-center align-middle w-screen h-screen">
-          <ActivityIndicator size={"large"} className=" mt-72  " />
+          <ActivityIndicator size={"large"} className=" mt-72   " />
         </View>
       ) : (
         <View>

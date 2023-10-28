@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Modal } from "react-native";
 import React, {
   createContext,
   useContext,
@@ -14,6 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import groupTypes from "../../../constants/GroupTypes";
 import router from "../../../common/routerHook";
 import ProfilePictureCard from "../../../components/cards/ProfilePictureCard";
+import EventOrGroupCreation from "../../../components/modals/EventOrGroupCreation";
 
 export const FilterContext = createContext(null);
 
@@ -32,6 +33,7 @@ const home = () => {
 
   const randomizedPostMessage = PostMessages[randomInRange(0, 4)];
 
+  const [displayCreationModal, setDisplayCreationModal] = useState(false);
   const [userData, setUserData] = useState(null);
   const [currentFilter, setCurrentFilter] = useState([]);
   const { login, getUserInfo } = useContext(AuthContext);
@@ -59,6 +61,11 @@ const home = () => {
 
   return (
     <View className="w-screen flex">
+      <Modal visible={displayCreationModal}>
+        <EventOrGroupCreation
+          thisDisplaySetter={setDisplayCreationModal}
+        ></EventOrGroupCreation>
+      </Modal>
       <ScrollView
         className=" mt-12 mx-4 flex"
         showsVerticalScrollIndicator={false}
@@ -77,7 +84,7 @@ const home = () => {
               <Text className="text-3xl font-semibold">Back</Text>
             </View>
           </View>
-          <View className="flex w-20 aspect-square ml-16 mt-2 ">
+          <View className="flex w-20 aspect-square ml-[14%] mt-2 ">
             <ProfilePictureCard width={"20"} />
           </View>
         </View>
@@ -117,7 +124,7 @@ const home = () => {
           <TouchableOpacity
             className=" w-14 aspect-square rounded-full bg-md-purple flex"
             onPress={() => {
-              router.push("/events");
+              setDisplayCreationModal(true);
             }}
           >
             <Text className=" text-4xl font-semibold px-4 mt-2">+</Text>
