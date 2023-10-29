@@ -100,10 +100,7 @@ const events = () => {
     }
 
     const imageKey = uuidv4();
-
     const img = await fetchImageFromUri(eventImgs);
-
-    console.log("1");
 
     const imageStoreageResult = await Storage.put(imageKey, img, {
       level: "public",
