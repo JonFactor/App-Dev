@@ -15,4 +15,4 @@ class User2EventSerialzier(serializers.ModelSerializer):
 class UserEventPreferencesSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserEventPreferences
-        feilds = ['user', 'event', 'isLiked', 'isDisliked']
+        fields = ['user', 'event', 'isLiked', 'isDisliked']

@@ -42,12 +42,12 @@ const home = () => {
 
   useEffect(() => {
     const setUser = async () => {
-      const userData = await getUserInfo().then((response) => {
-        if (userData === undefined) {
-          router.replace("login");
-        }
-        return response;
-      });
+      const userData = await getUserInfo(); // .then((response) => {
+      //   if (userData === undefined) {
+      //     router.replace("login");
+      //   }
+      //   return response;
+      // });
       setUserData(userData);
     };
     setUser();
