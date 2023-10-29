@@ -4,6 +4,7 @@ import { Image, ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { Storage } from "aws-amplify";
 import router from "../../common/routerHook";
+import { setEventUserPref } from "../../functions/Events";
 
 const EventCard = ({
   location,
@@ -45,12 +46,18 @@ const EventCard = ({
 
   const [cardOpacity, setCardOpacity] = useState(100);
 
-  const handleNavToEvent = () => {
-    router.push(`events/${id}`);
+  const handleNavToEvent = async () => {
+    const responseOk = await setEventUserPref(title, true, false);
+    if (responseOk) {
+      router.push(`events/${id}`);
+    }
   };
 
-  const handleDislikeEvent = () => {
-    // post pref event type -.01 + remove from feed
+  const handleDislikeEvent = async () => {
+    const responseOk = await setEventUserPref(title, false, true);
+    if (responseOk) {
+      router.replace("home");
+    }
   };
 
   const handleOpenInMaps = () => {
@@ -79,13 +86,13 @@ const EventCard = ({
     <ScrollView
       horizontal
       className=" h-{22rem} flex w-full "
-      onScrollEndDrag={(event) => {
+      onScrollEndDrag={async (event) => {
         const scrollLeft = handleScrollDirectionLeft(event);
 
         if (scrollLeft) {
-          handleDislikeEvent();
+          await handleDislikeEvent();
         } else {
-          handleNavToEvent();
+          await handleNavToEvent();
         }
       }}
       scrollEventThrottle={16}

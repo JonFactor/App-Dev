@@ -18,3 +18,9 @@ class User2Event(models.Model):
     isOwner = models.BooleanField(default=False)
     isCoOwner = models.BooleanField(default=False)
     isGuest = models.BooleanField(default=False)
+    
+class UserEventPreferences(models.Model):
+    user = models.ForeignKey("users.User", on_delete=models.CASCADE)
+    event = models.ForeignKey("event", on_delete=models.CASCADE)
+    isLiked = models.BooleanField()
+    isDisliked = models.BooleanField()

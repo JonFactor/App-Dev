@@ -47,6 +47,7 @@ const Events = (filters, noFilter: boolean) => {
   return (
     <View className="flex h-5/6 w-full  ">
       {eventData !== undefined &&
+        eventData !== null &&
         eventData.map(
           ({ date, group, location, title, id, coverImg }, index) => {
             const day = date.split("-")[1];

@@ -99,3 +99,23 @@ export const User2Event = async (
     return false;
   });
 };
+
+export const setEventUserPref = async (
+  eventTitle: string,
+  isLiked: boolean,
+  isDisliked: boolean
+): Promise<boolean> => {
+  return await fetch(
+    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/eventUserPreferencesSet`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ eventTitle, isLiked, isDisliked }),
+    }
+  ).then((response) => {
+    if (response.ok) {
+      return true;
+    }
+    return false;
+  });
+};

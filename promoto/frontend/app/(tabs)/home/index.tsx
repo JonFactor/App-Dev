@@ -15,6 +15,8 @@ import groupTypes from "../../../constants/GroupTypes";
 import router from "../../../common/routerHook";
 import ProfilePictureCard from "../../../components/cards/ProfilePictureCard";
 import EventOrGroupCreation from "../../../components/modals/EventOrGroupCreation";
+import { Stack, useNavigation } from "expo-router";
+import StackActions from "@react-navigation/native";
 
 export const FilterContext = createContext(null);
 
@@ -40,8 +42,12 @@ const home = () => {
 
   useEffect(() => {
     const setUser = async () => {
-      const userData = await getUserInfo();
-
+      const userData = await getUserInfo(); // .then((response) => {
+      //   if (userData === undefined) {
+      //     router.replace("login");
+      //   }
+      //   return response;
+      // });
       setUserData(userData);
     };
     setUser();
@@ -76,7 +82,7 @@ const home = () => {
               Hi{" "}
               {userData !== undefined && userData !== null
                 ? userData.name
-                : "ERROR"}
+                : "Loading..."}
               ,
             </Text>
             <View className=" flex-row space-x-2">
