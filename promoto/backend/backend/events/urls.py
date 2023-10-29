@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import EventCreationView, EventCollectionView, EventSingularGetViaIdView, EventSingularGetViaTitleView, EventUserAssignmentView
+from .views import EventCreationView, EventCollectionView, EventSingularGetViaIdView, EventSingularGetViaTitleView, EventUserAssignmentView, UserPreferenceSetView
 
 urlpatterns = [
     path("eventCreate", EventCreationView.as_view()),
@@ -7,4 +7,5 @@ urlpatterns = [
     path("eventData", EventSingularGetViaIdView.as_view()),
     path("eventDataViaName", EventSingularGetViaTitleView.as_view()),
     path("event2userCreate", EventUserAssignmentView.as_view()),
+    path("eventUserPreferencesSet", UserPreferenceSetView.as_view()),
 ] 

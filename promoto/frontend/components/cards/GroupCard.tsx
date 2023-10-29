@@ -39,7 +39,7 @@ const GroupCard = ({ item, routingIgnore }) => {
           source={image}
         >
           <View className=" bg-white p-1 rounded-md mt-4">
-            <Text className=" text-md-blue outline-2 outline-black text-lg font-semibold">
+            <Text className=" text-dark-blue text-lg font-semibold">
               {item.title}
             </Text>
           </View>

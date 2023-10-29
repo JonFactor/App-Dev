@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import EventSerializer, User2EventSerialzier
+from .serializers import EventSerializer, User2EventSerialzier, UserEventPreferencesSerializer
 from .models import Event
 from users.models import User
 import jwt
@@ -91,4 +91,20 @@ class EventUserAssignmentView(APIView):
         seralizer.save()
         return Response(seralizer.data)
             
+class UserPreferenceSetView(APIView): # credentails, isLiked, isDisliked, eventTitle
+    def post(self, request):
+        userId = getUser(request).id
+        user = User.objects.filter(id=userId).first()
         
+        eventTitle = request.data.get('eventTitle')
+        request.data.pop('eventTitle')
+        event = Event.objects.filter(title=eventTitle).first()
+        
+        request.data.update({'user': user.id})
+        request.data.update({'event': event.id})
+        
+        serializer = UserEventPreferencesSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        
+        return Response(serializer.data)
