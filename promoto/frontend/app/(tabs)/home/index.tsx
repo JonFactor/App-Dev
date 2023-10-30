@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { Image } from "expo-image";
 import { ScrollView } from "react-native-gesture-handler";
-import Events from "../../../components/collections/Events";
+import EventsCollection from "../../../components/collections/EventsCollection";
 import { AuthContext } from "../../../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import groupTypes from "../../../constants/GroupTypes";
@@ -138,7 +138,11 @@ const home = () => {
           <Text className=" text-2xl mt-2 ml-4">{randomizedPostMessage}</Text>
         </View>
         <View className=" w-full">
-          <Events filters={currentFilter} noFilter={false} />
+          <EventsCollection
+            filters={currentFilter}
+            noFilter={false}
+            excludeDisliked={true}
+          />
         </View>
       </ScrollView>
     </View>

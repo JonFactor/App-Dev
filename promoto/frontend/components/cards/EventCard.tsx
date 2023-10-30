@@ -100,7 +100,7 @@ const EventCard = ({
       <Image
         source={image}
         contentFit="cover"
-        className="rounded-3xl flex-1 w-96 ml-1"
+        className="rounded-3xl flex-1 w-11/12 ml-1"
       >
         <LinearGradient
           className=" p-4 w-full h-96 flex-col"

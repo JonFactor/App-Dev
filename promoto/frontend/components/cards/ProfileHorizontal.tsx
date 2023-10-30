@@ -4,8 +4,9 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { Image } from "expo-image";
 import { IUser } from "../../functions/Auth";
 import { Storage } from "aws-amplify";
+import router from "../../common/routerHook";
 
-const ProfileHorizontal = ({ profile }) => {
+const ProfileHorizontal = ({ profile, goToProfile }) => {
   const [userProfilePic, setUserProfilePic] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
@@ -18,12 +19,15 @@ const ProfileHorizontal = ({ profile }) => {
     getImg();
     setIsLoading(false);
   }, []);
+
   return (
     <View>
       <TouchableOpacity
         className=" flex-row ml-2"
         onPress={() => {
-          // remove from list
+          if (goToProfile) {
+            router.replace(`profile/${profile.name}`);
+          }
         }}
       >
         <View className=" flex aspect-square w-12">

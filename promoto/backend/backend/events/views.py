@@ -3,12 +3,14 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from .serializers import EventSerializer, User2EventSerialzier, UserEventPreferencesSerializer
-from .models import Event, UserEventPreferences
+from .models import Event, UserEventPreferences, User2Event
 from users.models import User
+from groups.models import Group, Event2Group
+from groups.serializers import GroupSerializer, Event2GroupSerializer
 import jwt
 from django.views.decorators.csrf import csrf_exempt
-from groups.models import Group
 from django.db.models import Q
+from users.serializers import UserSerializer
 
 # Create your views here.
 
@@ -27,7 +29,6 @@ def getUser(request):
 
 
 class EventCreationView(APIView):
-    @csrf_exempt
     def post(self, request):
         userId = getUser(request).id
         request.data.update({"owner":userId})   
@@ -39,8 +40,11 @@ class EventCreationView(APIView):
         request.data.pop("eventGroup")
         request.data.update({"eventGroup": eventGroupId})
         
+        print(request.data) #['id', 'title', 'location', 'owner', 'date', 'eventType', 'eventGroup', 'coverImg']
+        
         serializer = EventSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        print(serializer.data)
         serializer.save()
         return Response(serializer.data)
     
@@ -52,15 +56,44 @@ class EventSingularGetViaIdView(APIView):
         return Response(data=serializer.data)
 
 class EventCollectionView(APIView):
-    def get(self, request): # credentails
+    def post(self, request): # credentails
         user = getUser(request)
-        eventsDisliked = UserEventPreferences.objects.filter(user=user.id).filter(isDisliked=True)
+        filterEvents = None
         
-        ids = []
-        for e in eventsDisliked:
-            ids.append(e.event.id)
+        if request.data.get('isBaisedOnGroup'):
+            groupTitle = request.data.get('groupTitle')
+            group = Group.objects.filter(title=groupTitle).first()
+            print(group)
+            
+            event2Groups = Event2Group.objects.filter(group=group.id)
+            
+            ids = []
+            for e in event2Groups:
+                ids.append(e.event.id)
+        else:
+            if request.data.get('excludeDisliked'):
+                filterEvents = UserEventPreferences.objects.filter(user=user.id).filter(isDisliked=True)
+                filterEvents = UserEventPreferences.objects.filter(user=user.id).filter(isDisliked=True)
+                print(filterEvents)
+            elif request.data.get('isOnlyDisliked'):
+                filterEvents = UserEventPreferences.objects.filter(user=user.id).filter(isDisliked=True)
+            elif request.data.get('isOnlyLiked'):
+                filterEvents = UserEventPreferences.objects.filter(user=user.id).filter(isLiked=True)
+            else:
+                events = Event.objects.all()
+                serializer = EventSerializer(events, many=True)
+                return Response(data=serializer.data)
+            ids = []
+            if filterEvents != None:
+                for e in filterEvents:
+                    ids.append(e.event.id)
         
-        events = Event.objects.exclude(id__in=ids)
+        events = None
+        
+        if request.data.get('excludeDisliked'):
+            events = Event.objects.exclude(id__in=ids)
+        else:
+            events = Event.objects.filter(id__in=ids)
         serializer = EventSerializer(events, many=True)
         return Response(data=serializer.data)
     
@@ -115,4 +148,23 @@ class UserPreferenceSetView(APIView): # credentails, isLiked, isDisliked, eventT
         serializer.is_valid(raise_exception=True)
         serializer.save()
         
+        return Response(serializer.data)
+    
+class GetMembersFromEvent(APIView):
+    def post(self, request):
+        eventId = request.data.get('id')
+        
+        rawGroupsRelations = None
+        if request.data.get('isStaffOnly'):
+            rawGroupsRelations = User2Event.objects.filter(event=eventId)
+        else:
+            rawGroupsRelations = User2Event.objects.filter(event=eventId).filter(Q(isOwner=True) | Q(isCoOwner=True))
+        
+        
+        peopleIds = []
+        for relation in rawGroupsRelations:
+            peopleIds.append(relation.user.id)
+        
+        rawMembers = User.objects.filter(id__in=peopleIds)
+        serializer = UserSerializer(rawMembers, many=True)
         return Response(serializer.data)

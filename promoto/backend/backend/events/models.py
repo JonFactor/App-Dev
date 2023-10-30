@@ -5,6 +5,7 @@ import datetime
 
 class Event(models.Model):
     title = models.CharField(max_length=225, unique=True)
+    description = models.CharField(max_length=225, default="nothing to see here...")
     location = models.CharField(max_length=225)
     owner = models.ForeignKey("users.User", on_delete=models.CASCADE, default=1)
     date = models.DateField(datetime.datetime.now)

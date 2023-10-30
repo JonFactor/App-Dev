@@ -4,7 +4,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import router from "../../../common/routerHook";
 import { Image } from "expo-image";
-import Events from "../../../components/collections/Events";
+import EventsCollection from "../../../components/collections/EventsCollection";
 import * as ImagePicker from "expo-image-picker";
 import { Storage } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
@@ -12,6 +12,8 @@ import { ScrollView } from "react-native";
 import ProfilePictureCard from "../../../components/cards/ProfilePictureCard";
 import { IUser, UserViaId } from "../../../functions/Auth";
 import { FindFollowing, IUserToUser } from "../../../functions/Relations";
+import ProfileEvents from "../../../components/Views/ProfileEvents";
+import GroupCollection from "../../../components/collections/GroupCollection";
 
 const profile = () => {
   const { logout, getUserInfo, getUserProfilePhoto, setUserProfilePhoto } =
@@ -63,7 +65,6 @@ const profile = () => {
     }
 
     const userProfilePhoto = await setUserProfilePhoto(result);
-    console.log(userProfilePhoto);
 
     const profilePic = await getUserProfilePhoto();
     setUserProfilePic(profilePic);
@@ -192,9 +193,9 @@ const profile = () => {
         <View className=" w-5/6 h-1 bg-md-purple rounded-lg ml-8 mt-1" />
         <View className=" mx-4">
           {navSelected === 0 ? (
-            <Events filters={[]} />
+            <ProfileEvents />
           ) : navSelected === 1 ? (
-            <Text>Groups</Text>
+            <GroupCollection />
           ) : (
             <View className=" mt-4">
               {following === null || following.map === undefined ? (

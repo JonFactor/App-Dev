@@ -23,7 +23,7 @@ const GroupCard = ({ item, routingIgnore }) => {
 
   const handleGroupSelect = () => {
     if (routingIgnore !== "True") {
-      router.push(`groups/${item.title}`);
+      router.push(`discover/${item.title}`);
     }
   };
 

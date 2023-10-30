@@ -1,16 +1,21 @@
+import { IUser } from "./Auth";
+
 export interface IEvent {
   title: string;
+  description: string;
   ownerId: number;
   date: string;
-  group: string;
+  eventGroup: number;
+  eventType: string;
   location: string;
   coverImgUri: string;
 }
 
 export const EventCreate = async (
   title: string,
+  description: string,
   date: string,
-  group: string,
+  eventType: string,
   location: string,
   coverImg: string,
   eventGroup: string
@@ -22,9 +27,10 @@ export const EventCreate = async (
     credentials: "include",
     body: JSON.stringify({
       title,
+      description,
       location,
       date,
-      group,
+      eventType,
       coverImg,
       eventGroup,
     }),
@@ -38,12 +44,26 @@ export const EventCreate = async (
 };
 
 // might err
-export const EventsGetAll = async (): Promise<Array<IEvent>> => {
+export const EventsGetAll = async (
+  isOnlyDisliked: boolean = false,
+  isOnlyLiked: boolean = false,
+  excludeDisliked: boolean = false,
+  isBaisedOnGroup: boolean = false,
+  groupTitle: string = ""
+): Promise<Array<IEvent>> => {
   return await fetch(
     `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/eventCollection`,
     {
-      method: "GET",
+      method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        isOnlyDisliked,
+        isOnlyLiked,
+        excludeDisliked,
+        isBaisedOnGroup,
+        groupTitle,
+      }),
     }
   ).then(async (response) => {
     if (!response.ok) {
@@ -117,5 +137,26 @@ export const setEventUserPref = async (
       return true;
     }
     return false;
+  });
+};
+
+export const GetEventMembers = async (
+  id: number,
+  isStaffOnly: boolean = false
+): Promise<Array<IUser>> => {
+  return await fetch(
+    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/getMembersFromEvent`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ id, isStaffOnly }),
+    }
+  ).then(async (response) => {
+    if (response.ok) {
+      return await response.json();
+    } else {
+      return null;
+    }
   });
 };

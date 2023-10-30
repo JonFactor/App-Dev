@@ -1,3 +1,5 @@
+import { IUser } from "./Auth";
+
 export interface IGroup {
   title: string;
   description: string;
@@ -76,6 +78,62 @@ export const GetGroupsViaUser = async (): Promise<Array<IGroup>> => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
+    }
+  ).then(async (response) => {
+    if (response.ok) {
+      return await response.json();
+    }
+    return null;
+  });
+};
+
+export const GetGroupDetails = async (title: string): Promise<IGroup> => {
+  return await fetch(
+    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/getGroupData`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ title }),
+    }
+  ).then(async (response) => {
+    if (response.ok) {
+      return await response.json();
+    } else {
+      return null;
+    }
+  });
+};
+
+export const GetGroupMembers = async (
+  title: string,
+  isStaffOnly: boolean = false
+): Promise<Array<IUser>> => {
+  return await fetch(
+    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/getMembersFromGroup`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ title, isStaffOnly }),
+    }
+  ).then(async (response) => {
+    if (response.ok) {
+      return await response.json();
+    } else {
+      return null;
+    }
+  });
+};
+
+export const GetGroupViaId = async (id: number): Promise<IGroup> => {
+  return await fetch(
+    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/getGroupViaId`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ id }),
     }
   ).then(async (response) => {
     if (response.ok) {

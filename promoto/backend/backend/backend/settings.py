@@ -57,6 +57,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "backend.urls"
+CSRF_COOKIE_SECURE = False
 
 TEMPLATES = [
     {

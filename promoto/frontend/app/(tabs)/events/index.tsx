@@ -113,6 +113,7 @@ const events = () => {
     const group = eventGroupId.toString();
     const responseOk = await EventCreate(
       eventTitle,
+      eventDescription,
       date,
       catigory,
       eventLocation,
@@ -121,51 +122,55 @@ const events = () => {
     );
 
     if (!responseOk) {
+      console.log(1);
       setIsLoading(false);
       return;
     }
 
-    // const ownerEventOk = await User2Event(
-    //   false,
-    //   "",
-    //   eventTitle,
-    //   true,
-    //   false,
-    //   false
-    // );
-    // if (!ownerEventOk) {
-    //   setIsLoading(false);
-    //   return;
-    // }
+    const ownerEventOk = await User2Event(
+      false,
+      "",
+      eventTitle,
+      true,
+      false,
+      false
+    );
+    if (!ownerEventOk) {
+      console.log(2);
+      setIsLoading(false);
+      return;
+    }
 
-    // for (let i = 0; i < eventCoHosts.length; i++) {
-    //   const resultOk = User2Event(
-    //     true,
-    //     eventCoHosts[i].email,
-    //     eventTitle,
-    //     false,
-    //     true,
-    //     false
-    //   );
-    //   if (!resultOk) {
-    //     setIsLoading(false);
-    //     return;
-    //   }
-    // }
-    // for (let i = 0; i < eventGuests.length; i++) {
-    //   const resultOk = User2Event(
-    //     true,
-    //     eventGuests[i].email,
-    //     eventTitle,
-    //     false,
-    //     false,
-    //     true
-    //   );
-    //   if (!resultOk) {
-    //     setIsLoading(false);
-    //     return;
-    //   }
-    // }
+    for (let i = 0; i < eventCoHosts.length; i++) {
+      const resultOk = User2Event(
+        true,
+        eventCoHosts[i].email,
+        eventTitle,
+        false,
+        true,
+        false
+      );
+      if (!resultOk) {
+        console.log(3);
+        setIsLoading(false);
+        return;
+      }
+    }
+    for (let i = 0; i < eventGuests.length; i++) {
+      const resultOk = User2Event(
+        true,
+        eventGuests[i].email,
+        eventTitle,
+        false,
+        false,
+        true
+      );
+      if (!resultOk) {
+        console.log(4);
+        setIsLoading(false);
+        return;
+      }
+    }
 
     router.back();
     setIsLoading(false);

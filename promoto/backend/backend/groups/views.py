@@ -1,3 +1,4 @@
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -9,7 +10,9 @@ from events.models import Event
 from .models import Group, User2Group
 from events.serializers import EventSerializer
 import jwt
+from django.views.decorators.csrf import csrf_exempt
 import datetime
+from django.db.models import Q
 
 # Create your views here.
 
@@ -89,14 +92,15 @@ class GetAllGroupsByTypeView(APIView):
         
 class GetGroupDataView(APIView):
     def post(self, request):
-        requTitle = request.data['title']
+        requTitle = request.data.get('title')
         group = Group.objects.filter(title=requTitle).first()
         serialzier = GroupSerializer(group)
-        serialzier.is_valid(raise_exception=True)
-        serialzier.save()
-        return Response(serialzier)
+        print(serialzier.data)
+        #serialzier.is_valid(raise_exception=True)
+        return Response(serialzier.data)
     
 class GetGroupViaUserView(APIView):
+    @csrf_exempt
     def post(self, request):
         user = getUser(request).id
 
@@ -157,6 +161,32 @@ class RemoveUserFromGroupView(APIView):
         userToGroupSerializer.is_valid(raise_exception=True)
         userToGroupSerializer.save()
         
-        return Response(userToGroupSerializer)
+        return Response(userToGroupSerializer.data)
     
-    
+class GetMembersFromGroupView(APIView):
+    def post(self, request):
+        title = request.data.get('title')
+        groupId = Group.objects.filter(title=title).first().id
+        
+        rawGroupsRelations = None
+        if request.data.get('isStaffOnly'):
+            rawGroupsRelations = User2Group.objects.filter(group=groupId)
+        else:
+            rawGroupsRelations = User2Group.objects.filter(group=groupId).filter(Q(isOwner=True) | Q(isCoOwner=True))
+        
+        
+        peopleIds = []
+        for relation in rawGroupsRelations:
+            peopleIds.append(relation.user.id)
+        
+        rawMembers = User.objects.filter(id__in=peopleIds)
+        serializer = UserSerializer(rawMembers, many=True)
+        return Response(serializer.data)
+        
+class GetGroupViaIdView(APIView):
+    def post(self, request):
+        groupId = request.data.get("id")
+        group = Group.objects.filter(id=groupId).first()
+        serializer = GroupSerializer(group)
+        #serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)
