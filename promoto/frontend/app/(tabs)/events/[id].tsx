@@ -1,6 +1,11 @@
 import { View, Text, ActivityIndicator, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Stack, useSearchParams, useGlobalSearchParams } from "expo-router";
+import {
+  Stack,
+  useSearchParams,
+  useGlobalSearchParams,
+  useLocalSearchParams,
+} from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import router from "../../../common/routerHook";
 import {
@@ -16,7 +21,7 @@ import { IUser } from "../../../functions/Auth";
 import ProfileHorizontal from "../../../components/cards/ProfileHorizontal";
 
 const eventDetailsPage = () => {
-  const { id } = useGlobalSearchParams();
+  const { id } = useLocalSearchParams();
   const [eventData, setEventData] = useState<IEvent>(null);
   const [eventImage, setEventImage] = useState(null);
   const [groupDetails, setGroupDetails] = useState<IGroup>(null);
@@ -80,15 +85,14 @@ const eventDetailsPage = () => {
         <View className="py-12">
           <View className=" flex-row">
             <TouchableOpacity
-              className=" ml-8 mt-1 "
+              className=" ml-8 mt-1 absolute "
               onPress={() => {
                 router.back();
               }}
             >
               <Text className=" text-red-400 text-2xl">exit</Text>
             </TouchableOpacity>
-            <View className=" h-1 w-1/4" />
-            <View className=" w-full flex mt-2">
+            <View className=" w-full flex mt-2 items-center">
               <Text className=" text-3xl font-semibold ">
                 {eventData.title}
               </Text>

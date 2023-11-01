@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Image, ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { Storage } from "aws-amplify";
-import router from "../../common/routerHook";
+import { router } from "expo-router";
 import { setEventUserPref } from "../../functions/Events";
 
 const EventCard = ({

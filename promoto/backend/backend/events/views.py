@@ -44,7 +44,6 @@ class EventCreationView(APIView):
         
         serializer = EventSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        print(serializer.data)
         serializer.save()
         return Response(serializer.data)
     

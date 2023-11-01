@@ -38,8 +38,8 @@ const GroupCard = ({ item, routingIgnore }) => {
           contentFit="cover"
           source={image}
         >
-          <View className=" bg-white p-1 rounded-md mt-4">
-            <Text className=" text-dark-blue text-lg font-semibold">
+          <View className=" bg-white rounded-bl-2xl rounded-br-2xl w-full h-12  border-black mt-28 flex items-center ">
+            <Text className="  text-md-purple text-xl font-semibold">
               {item.title}
             </Text>
           </View>

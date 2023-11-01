@@ -107,7 +107,7 @@ const register = () => {
       return;
     }
 
-    router.replace("/login");
+    router.push("/login");
   };
   return (
     <View className=" p-10">
