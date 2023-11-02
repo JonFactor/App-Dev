@@ -43,6 +43,8 @@ class EventCreationView(APIView):
         print(request.data) #['id', 'title', 'location', 'owner', 'date', 'eventType', 'eventGroup', 'coverImg']
         
         serializer = EventSerializer(data=request.data)
+        if serializer.is_valid() == False:
+            print(serializer.errors)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)

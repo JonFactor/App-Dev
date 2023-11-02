@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, RefreshControl } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -29,8 +29,9 @@ const profile = () => {
 
   useEffect(() => {
     const loadUser = async () => {
-      const content = await getUserInfo();
+      const content: IUser = await getUserInfo();
       // set user desc
+
       setUserDesctiption(content.description);
       setUserName(content.name);
       setUserId(content.id);
@@ -66,8 +67,10 @@ const profile = () => {
 
     const userProfilePhoto = await setUserProfilePhoto(result);
 
-    const profilePic = await getUserProfilePhoto();
-    setUserProfilePic(profilePic);
+    await fetchImageFromUri(result).then((result) => {
+      setUserProfilePic(result);
+      console.log(result);
+    });
   };
 
   const fetchImageFromUri = async (uri) => {
@@ -215,6 +218,7 @@ const profile = () => {
                             <ProfilePictureCard
                               width={"12"}
                               userid={value.id}
+                              passedPic={userProfilePic}
                             />
                           </View>
                           <View className=" flex-col ml-4 mt-1">

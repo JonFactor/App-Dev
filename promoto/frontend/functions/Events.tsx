@@ -8,7 +8,7 @@ export interface IEvent {
   eventGroup: number;
   eventType: string;
   location: string;
-  coverImgUri: string;
+  coverImg: string;
 }
 
 export const EventCreate = async (
@@ -141,7 +141,7 @@ export const setEventUserPref = async (
 };
 
 export const GetEventMembers = async (
-  id: number,
+  id: string,
   isStaffOnly: boolean = false
 ): Promise<Array<IUser>> => {
   return await fetch(

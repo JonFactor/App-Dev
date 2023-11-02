@@ -5,12 +5,15 @@ import { AuthContext } from "../../context/AuthContext";
 import { UserViaId } from "../../functions/Auth";
 import { Storage } from "aws-amplify";
 
-const ProfilePictureCard = ({ width, userid = null }) => {
+const ProfilePictureCard = ({ width, userid = null, passedPic = null }) => {
   const { getUserProfilePhoto, isLoading } = useContext(AuthContext);
   const [userProfilePic, setUserProfilePic] = useState(null);
 
   useEffect(() => {
     const profilePicSelf = async () => {
+      if (passedPic !== null) {
+        setUserProfilePic(passedPic);
+      }
       const Profile = await getUserProfilePhoto();
       setUserProfilePic(Profile);
     };
@@ -22,6 +25,10 @@ const ProfilePictureCard = ({ width, userid = null }) => {
       }
 
       const userPhotoUri = Profile.profilePic;
+      if (userPhotoUri.includes("www.")) {
+        setUserProfilePic(userPhotoUri);
+        return;
+      }
 
       const photo: string = await Storage.get(userPhotoUri);
       setUserProfilePic(photo);

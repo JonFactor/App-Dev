@@ -1,4 +1,10 @@
-import { View, Text, ActivityIndicator, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  ScrollView,
+  Touchable,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import {
   Stack,
@@ -22,6 +28,7 @@ import ProfileHorizontal from "../../../components/cards/ProfileHorizontal";
 
 const eventDetailsPage = () => {
   const { id } = useLocalSearchParams();
+  const readId: string = id.toString();
   const [eventData, setEventData] = useState<IEvent>(null);
   const [eventImage, setEventImage] = useState(null);
   const [groupDetails, setGroupDetails] = useState<IGroup>(null);
@@ -30,24 +37,24 @@ const eventDetailsPage = () => {
 
   useEffect(() => {
     const eventDetails = async () => {
-      const content: IEvent = await EventsGetDetails(id.toString());
+      const content: IEvent = await EventsGetDetails(readId);
       if (content === undefined) {
         return;
       }
       setEventData(content);
 
-      const image = await Storage.get(content.coverImgUri);
+      const image = await Storage.get(content.coverImg);
       setEventImage(image);
 
       const groupName = await GetGroupViaId(content.eventGroup);
       setGroupDetails(groupName);
 
-      const responseAll = await GetEventMembers(id, false);
+      const responseAll = await GetEventMembers(readId, false);
       if (responseAll != null) {
         setEventMembers(responseAll);
       }
 
-      const responseStaff = await GetEventMembers(id, true);
+      const responseStaff = await GetEventMembers(readId, true);
       if (responseStaff != null) {
         setEventStaff(responseStaff);
       }
@@ -83,28 +90,24 @@ const eventDetailsPage = () => {
         </View>
       ) : (
         <View className="py-12">
-          <View className=" flex-row">
-            <TouchableOpacity
-              className=" ml-8 mt-1 absolute "
-              onPress={() => {
-                router.back();
-              }}
-            >
-              <Text className=" text-red-400 text-2xl">exit</Text>
-            </TouchableOpacity>
-            <View className=" w-full flex mt-2 items-center">
-              <Text className=" text-3xl font-semibold ">
-                {eventData.title}
-              </Text>
-            </View>
+          <TouchableOpacity
+            className=" ml-8 mt-1 w-12 h-6 "
+            onPress={() => {
+              router.back();
+            }}
+          >
+            <Text className=" text-red-400 text-2xl">exit</Text>
+          </TouchableOpacity>
+          <View className=" w-full flex items-center absolute mt-14">
+            <Text className=" text-3xl font-semibold ">{eventData.title}</Text>
           </View>
-          <View className=" w-screen items-center flex">
-            <View className="flex  w-11/12 h-64 bg-gray-300">
+          <View className=" w-screen items-center flex mt-6">
+            <View className="flex  w-11/12 h-64 bg-gray-300 rounded-2xl">
               {eventImage !== null && (
                 <Image
                   source={eventImage}
                   contentFit="cover"
-                  className=" flex-1"
+                  className=" flex-1 rounded-2xl"
                 ></Image>
               )}
             </View>

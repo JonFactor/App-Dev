@@ -27,9 +27,7 @@ const events = () => {
 
   const [eventTitle, setEventTitle] = useState("");
   const [eventDescription, setEventDesctiption] = useState("");
-  const [eventImgs, setEventImgs] = useState(
-    require("../../../assets/placeholders/NextEventCover.png")
-  );
+  const [eventImgs, setEventImgs] = useState(null);
   const [eventGroupId, setEventGroupId] = useState(null);
   const [eventLocation, setEventLocation] = useState("");
   const [eventType, setEventType] = useState([]);
@@ -61,6 +59,7 @@ const events = () => {
   }, []);
 
   const validateEventEntries = () => {
+    let dateList = eventDate.split("/");
     if (eventTitle === "") {
       setWarning("Title is required");
       return false;
@@ -80,6 +79,13 @@ const events = () => {
       return false;
     } else if (!(eventDate.includes("/", 2) && eventDate.includes("/", 5))) {
       setWarning("date must be formated as: mm/dd/yyyy");
+      return false;
+    } else if (
+      parseInt(dateList[0]) > 12 ||
+      parseInt(dateList[1]) > 31 ||
+      parseInt(dateList[2]) > 2024
+    ) {
+      setWarning("date must be real. (mm < 13, dd < 32, yyyy < 2024)");
       return false;
     }
     return true;
@@ -101,14 +107,15 @@ const events = () => {
 
     const imageKey = uuidv4();
     const img = await fetchImageFromUri(eventImgs);
+    const imgPath = "events/" + imageKey;
 
-    const imageStoreageResult = await Storage.put(imageKey, img, {
+    const imageStoreageResult = await Storage.put(imgPath, img, {
       level: "public",
       contentType: img.type,
     });
 
     let dateList = eventDate.split("/");
-    const date = `${dateList[2]}-${dateList[1]}-${dateList[0]}`;
+    const date = `${dateList[2]}-${dateList[0]}-${dateList[1]}`;
     const catigory = eventType.join(", ");
     const group = eventGroupId.toString();
     const responseOk = await EventCreate(
@@ -117,7 +124,7 @@ const events = () => {
       date,
       catigory,
       eventLocation,
-      imageKey,
+      imgPath,
       group
     );
 
@@ -265,7 +272,7 @@ const events = () => {
           <View className=" h-72 flex w-full">
             <LinearGradient
               className=" w-full h-full flex"
-              colors={["rgba(0,0,0,.15)", "transparent"]}
+              colors={["rgba(0,0,0,.25)", "transparent"]}
             >
               <Image className=" flex-1" contentFit="cover" source={eventImgs}>
                 <TouchableOpacity

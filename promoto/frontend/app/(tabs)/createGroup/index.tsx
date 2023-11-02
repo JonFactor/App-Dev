@@ -115,15 +115,16 @@ const createGroup = () => {
     const imageUri = result.assets[0].uri;
     setGroupImage(imageUri);
     const imageKey = uuidv4();
+    const imgPath = "groups/" + imageKey;
 
     const img = await fetchImageFromUri(imageUri);
 
-    const imageStoreageResult = await Storage.put(imageKey, img, {
+    const imageStoreageResult = await Storage.put(imgPath, img, {
       level: "public",
       contentType: img.type,
     });
 
-    setGroupImageKey(imageKey);
+    setGroupImageKey(imgPath);
   };
 
   const handleAddFriends = async () => {};

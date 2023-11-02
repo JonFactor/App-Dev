@@ -2,7 +2,7 @@ import { View, Text, ScrollView } from "react-native";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import EventCard from "../cards/EventCard";
 import { FilterContext } from "../../app/(tabs)/home";
-import { EventsGetAll } from "../../functions/Events";
+import { EventsGetAll, IEvent } from "../../functions/Events";
 
 interface params {
   filters: string[];
@@ -47,7 +47,6 @@ const EventsCollection = ({
           true,
           groupTitle
         ).then((response) => {
-          console.log(response);
           return response;
         });
       } else {
@@ -90,10 +89,10 @@ const EventsCollection = ({
       {eventData !== undefined &&
         eventData !== null &&
         eventData.map(
-          ({ date, group, location, title, id, coverImg }, index) => {
+          ({ date, eventType, location, title, id, coverImg }, index) => {
             const day = date.split("-")[1];
             const month = date.split("-")[2];
-            const isFiltered = handleIsFiltered(group);
+            const isFiltered = handleIsFiltered(eventType);
 
             if (isFiltered) {
               return (
@@ -105,7 +104,7 @@ const EventsCollection = ({
                     location={location}
                     id={id}
                     imagePath={coverImg}
-                    eventType={group}
+                    eventType={eventType}
                   />
                 </View>
               );

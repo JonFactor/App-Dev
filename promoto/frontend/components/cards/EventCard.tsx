@@ -122,7 +122,9 @@ const EventCard = ({
                   eventType.length < 6 ? "lg" : "2xl"
                 } font-semibold`}
               >
-                {eventType.length < 6 ? eventType : eventType[0].toUpperCase()}
+                {eventType.length < 6
+                  ? eventType
+                  : `${eventType[0].toUpperCase()}${eventType[1].toUpperCase()}${eventType[2].toUpperCase()}`}
               </Text>
             </View>
           </View>

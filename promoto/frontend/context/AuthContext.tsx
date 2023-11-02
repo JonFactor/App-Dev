@@ -81,7 +81,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   const fetchImageFromUri = async (uri: string): Promise<Blob> => {
-    console.log(uri);
     const response = await fetch(uri);
     const blob = await response.blob();
 
@@ -96,16 +95,24 @@ export const AuthProvider = ({ children }) => {
     }
 
     // check from storage
-    let userPhotoUri = await AsyncStorage.getItem("profilePicKey");
-    if (userPhotoUri === null) {
-      // check from db
-      const userInfo = await getUserInfo();
-      if (userInfo === null) {
-        setIsLoading(false);
-        return null;
-      }
+    let userPhotoUri;
+    // check from db
+    const userInfo = await getUserInfo();
+    if (userInfo === null) {
+      setIsLoading(false);
+      return null;
+    }
 
-      userPhotoUri = userInfo.profilePic;
+    userPhotoUri = userInfo.profilePic;
+
+    if (
+      userPhotoUri.includes("h") &&
+      userPhotoUri.includes("t") &&
+      userPhotoUri.includes("t") &&
+      userPhotoUri.includes("p")
+    ) {
+      setUserProfilePic(userPhotoUri);
+      return userPhotoUri;
     }
 
     const photo: string = await Storage.get(userPhotoUri);
@@ -121,28 +128,40 @@ export const AuthProvider = ({ children }) => {
   ): Promise<boolean> => {
     setIsLoading(true);
     const imageKey = uuidv4();
+    const imgPath = "profile/" + imageKey;
 
     const img = await fetchImageFromUri(image["assets"][0]["uri"]);
 
-    const imageStoreageResult = await Storage.put(imageKey, img, {
+    const imageStoreageResult = await Storage.put(imgPath, img, {
       level: "public",
       contentType: img.type,
     });
 
+    let oldUser;
     if (userId === null) {
-      const userInfo = await getUserInfo();
+      const userInfo: IUser = await getUserInfo();
       if (userInfo === null) {
         setIsLoading(false);
         return false;
       }
+      oldUser = userInfo.profilePic;
       userId = userInfo.id;
     }
 
     const userIdConvert: string = userId.toString();
 
-    const responseSuccess = await UserUpdateProfile(imageKey, userIdConvert);
-
-    AsyncStorage.setItem("profilePicKey", imageKey);
+    const responseSuccess = await UserUpdateProfile(
+      imgPath,
+      userIdConvert
+    ).then((response) => {
+      if (response && oldUser !== null) {
+        console.log("12");
+        // const removeSuccess = await Storage.remove(oldUser, {
+        //   level: "public",
+        // });
+      }
+      return response;
+    });
 
     setIsLoading(false);
     return responseSuccess;
