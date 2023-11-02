@@ -6,7 +6,6 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { useFonts } from "expo-font";
 import { Image } from "expo-image";
 import { AuthContext } from "../../../context/AuthContext";
-import { UserLogin } from "../../../functions/Auth";
 import router from "../../../common/routerHook";
 
 const LoginPage = () => {
@@ -74,7 +73,7 @@ const LoginPage = () => {
       return;
     }
 
-    const cookie = response.headers.map["set-cookie"];
+    const cookie = response["jwt"];
     loginViaCookies(cookie);
 
     router.back();

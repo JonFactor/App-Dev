@@ -1,3 +1,9 @@
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: `${process.env.EXPO_PUBLIC_BACKEND_URL}/api`,
+});
+
 export interface IUser {
   id: number;
   name: string;
@@ -11,39 +17,25 @@ export interface IUser {
 }
 
 export const UserGetDetails = async (): Promise<IUser> => {
-  return await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/user`, {
-    headers: {
-      "Content-Type": "application-json",
-    },
-    credentials: "include",
-  }).then(async (response) => {
-    if (response.ok) {
-      return await response.json();
-    } else {
-      console.log(response.status);
+  const response = api
+    .get("user")
+    .then((response) => {
+      return response.data;
+    })
+    .catch((err) => {
       return null;
-    }
-  });
+    });
+  return await response;
 };
 
 export const UserLogin = async (
   email: string,
   password: string
 ): Promise<Response> => {
-  return await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify({
-      email,
-      password,
-    }),
-  }).then((response) => {
-    if (response.ok) {
-      return response;
-    }
+  const response = api.post("login", { email, password }).catch((err) => {
     return null;
   });
+  return await response;
 };
 
 export const UserRegister = async (
@@ -53,70 +45,39 @@ export const UserRegister = async (
   firstName: string,
   lastName: string
 ): Promise<boolean> => {
-  return await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name,
-      email,
-      password,
-      firstName,
-      lastName,
-    }),
-  }).then((response) => {
-    if (response.ok) {
-      return true;
-    }
-    return false;
+  const response = api.post("register", {
+    name,
+    email,
+    password,
+    firstName,
+    lastName,
   });
+  return (await response).status === 200;
 };
 
 export const UserLoginViaCookies = async (jwt: string): Promise<boolean> => {
-  const url: string = `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/cookieLogin`;
-
   if (jwt === null) {
     return false;
   }
 
-  jwt = jwt.split("=")[1];
-  return await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify({ jwt }),
-  }).then((response) => {
-    if (response.ok) {
-      return true;
-    }
-    return false;
-  });
+  const response = api.post("cookieLogin", { jwt });
+  return (await response).status === 200;
 };
 
 export const UserUpdateProfile = async (
   profilePicUrl: String,
   id: String
 ): Promise<boolean> => {
-  return await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/setProfile`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id, profilePicUrl }),
-  }).then((response) => {
-    if (response.ok) {
-      return true;
-    }
-    return false;
-  });
+  const response = api
+    .post("setProfile", { profilePicUrl, id })
+    .catch((err) => {
+      console.log("profile:" + err);
+      return response;
+    });
+  return (await response).status === 200;
 };
 
 export const UserViaId = async (id: string): Promise<IUser> => {
-  return await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/userViaId`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id }),
-  }).then((response) => {
-    if (response.ok) {
-      return response.json();
-    }
-    return null;
-  });
+  const response = api.post("userViaId", { id });
+  return (await response).data;
 };

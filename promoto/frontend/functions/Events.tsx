@@ -1,5 +1,11 @@
 import { IUser } from "./Auth";
 
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: `${process.env.EXPO_PUBLIC_BACKEND_URL}/api`,
+});
+
 export interface IEvent {
   title: string;
   description: string;
@@ -21,26 +27,16 @@ export const EventCreate = async (
   eventGroup: string
   // coverImg: string
 ): Promise<boolean> => {
-  return await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/eventCreate`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify({
-      title,
-      description,
-      location,
-      date,
-      eventType,
-      coverImg,
-      eventGroup,
-    }),
-  }).then((response) => {
-    if (response.ok) {
-      return true;
-    }
-
-    return false;
+  const response = api.post("eventCreate", {
+    title,
+    description,
+    date,
+    eventType,
+    location,
+    coverImg,
+    eventGroup,
   });
+  return (await response).status === 200;
 };
 
 // might err
@@ -51,42 +47,20 @@ export const EventsGetAll = async (
   isBaisedOnGroup: boolean = false,
   groupTitle: string = ""
 ): Promise<Array<IEvent>> => {
-  return await fetch(
-    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/eventCollection`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({
-        isOnlyDisliked,
-        isOnlyLiked,
-        excludeDisliked,
-        isBaisedOnGroup,
-        groupTitle,
-      }),
-    }
-  ).then(async (response) => {
-    if (!response.ok) {
-      console.log("EventsGetAllErr: " + response.status);
-      return null;
-    }
-    const content = await response.json();
-    return content;
+  const response = api.post("eventCollection", {
+    isOnlyDisliked,
+    isOnlyLiked,
+    excludeDisliked,
+    isBaisedOnGroup,
+    groupTitle,
   });
+
+  return (await response).data;
 };
 
 export const EventsGetDetails = async (id: string): Promise<IEvent> => {
-  return await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/eventData`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id }),
-  }).then(async (response) => {
-    if (!response.ok) {
-      console.log("EventGetSingular: " + response.status);
-      return null;
-    }
-    return await response.json();
-  });
+  const response = api.post("eventData", { id });
+  return (await response).data;
 };
 
 export const User2Event = async (
@@ -97,27 +71,15 @@ export const User2Event = async (
   isCoOwner: boolean,
   isGuest: boolean
 ): Promise<boolean> => {
-  return await fetch(
-    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/event2userCreate`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({
-        viaEmail,
-        email,
-        eventTitle,
-        isOwner,
-        isCoOwner,
-        isGuest,
-      }),
-    }
-  ).then((response) => {
-    if (response.ok) {
-      return true;
-    }
-    return false;
+  const response = api.post("event2userCreate", {
+    viaEmail,
+    email,
+    eventTitle,
+    isOwner,
+    isCoOwner,
+    isGuest,
   });
+  return (await response).status === 200;
 };
 
 export const setEventUserPref = async (
@@ -125,38 +87,18 @@ export const setEventUserPref = async (
   isLiked: boolean,
   isDisliked: boolean
 ): Promise<boolean> => {
-  return await fetch(
-    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/eventUserPreferencesSet`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ eventTitle, isLiked, isDisliked }),
-    }
-  ).then((response) => {
-    if (response.ok) {
-      return true;
-    }
-    return false;
+  const response = api.post("eventUserPreferencesSet", {
+    eventTitle,
+    isLiked,
+    isDisliked,
   });
+  return (await response).status === 200;
 };
 
 export const GetEventMembers = async (
   id: string,
   isStaffOnly: boolean = false
 ): Promise<Array<IUser>> => {
-  return await fetch(
-    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/getMembersFromEvent`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ id, isStaffOnly }),
-    }
-  ).then(async (response) => {
-    if (response.ok) {
-      return await response.json();
-    } else {
-      return null;
-    }
-  });
+  const response = api.post("getMembersFromEvent", { id, isStaffOnly });
+  return (await response).data;
 };

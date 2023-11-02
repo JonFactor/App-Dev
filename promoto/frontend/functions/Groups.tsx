@@ -1,5 +1,11 @@
 import { IUser } from "./Auth";
 
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: `${process.env.EXPO_PUBLIC_BACKEND_URL}/api`,
+});
+
 export interface IGroup {
   title: string;
   description: string;
@@ -14,30 +20,18 @@ export const CreateGroup = async (
   image: string,
   groupType: string
 ): Promise<IGroup> => {
-  return await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/createGroup`, {
-    method: "post",
-    headers: { "Content-type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify({ title, description, image, groupType }),
-  }).then(async (response) => {
-    if (!response.ok) {
-      return null;
-    }
-    return await response.json();
+  const response = api.post("createGroup", {
+    title,
+    description,
+    image,
+    groupType,
   });
+  return (await response).data;
 };
 
 export const GetAllGroups = async (): Promise<Array<IGroup>> => {
-  return await fetch(
-    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/getAllGroups`,
-    { method: "GET", headers: { "Content-Type": "application/json" } }
-  ).then(async (response) => {
-    if (!response.ok) {
-      console.log(response.status);
-      return null;
-    }
-    return await response.json();
-  });
+  const response = api.get("getAllGroups");
+  return (await response).data;
 };
 
 export const AddUserToGroupView = async (
@@ -48,97 +42,36 @@ export const AddUserToGroupView = async (
   isMember: boolean,
   isBanned: boolean
 ): Promise<boolean> => {
-  return await fetch(
-    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/addUserToGroup`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({
-        email,
-        title,
-        isOwner,
-        isCoOwner,
-        isMember,
-        isBanned,
-      }),
-    }
-  ).then((response) => {
-    if (response.ok) {
-      return true;
-    }
-    return false;
+  const response = api.post("addUserToGroup", {
+    email,
+    title,
+    isOwner,
+    isCoOwner,
+    isMember,
+    isBanned,
   });
+  return (await response).status === 200;
 };
 
 export const GetGroupsViaUser = async (): Promise<Array<IGroup>> => {
-  return await fetch(
-    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/getGroupViaUser`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    }
-  ).then(async (response) => {
-    if (response.ok) {
-      return await response.json();
-    }
-    return null;
-  });
+  const response = api.post("getGroupViaUser");
+  return (await response).data;
 };
 
 export const GetGroupDetails = async (title: string): Promise<IGroup> => {
-  return await fetch(
-    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/getGroupData`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ title }),
-    }
-  ).then(async (response) => {
-    if (response.ok) {
-      return await response.json();
-    } else {
-      return null;
-    }
-  });
+  const response = api.post("getGroupData");
+  return (await response).data;
 };
 
 export const GetGroupMembers = async (
   title: string,
   isStaffOnly: boolean = false
 ): Promise<Array<IUser>> => {
-  return await fetch(
-    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/getMembersFromGroup`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ title, isStaffOnly }),
-    }
-  ).then(async (response) => {
-    if (response.ok) {
-      return await response.json();
-    } else {
-      return null;
-    }
-  });
+  const response = api.post("getMembersFromGroup", { title, isStaffOnly });
+  return (await response).data;
 };
 
 export const GetGroupViaId = async (id: number): Promise<IGroup> => {
-  return await fetch(
-    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/getGroupViaId`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ id }),
-    }
-  ).then(async (response) => {
-    if (response.ok) {
-      return await response.json();
-    }
-    return null;
-  });
+  const response = api.post("getGroupViaId", { id });
+  return (await response).data;
 };

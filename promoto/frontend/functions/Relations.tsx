@@ -1,5 +1,11 @@
 import { IUser } from "./Auth";
 
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: `${process.env.EXPO_PUBLIC_BACKEND_URL}/api`,
+});
+
 export interface IUserToUser {
   firstUser: number;
   id: number;
