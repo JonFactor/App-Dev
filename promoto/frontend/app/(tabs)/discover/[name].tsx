@@ -1,6 +1,6 @@
 import { View, Text, ScrollView } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
-import { Stack, useSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, useSearchParams } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import router from "../../../common/routerHook";
 import ProfilePictureCard from "../../../components/cards/ProfilePictureCard";
@@ -19,7 +19,9 @@ import EventsCollection from "../../../components/collections/EventsCollection";
 import { Storage } from "aws-amplify";
 
 const CatigoryDetailsPage = () => {
-  const { name } = useSearchParams();
+  const { name } = useLocalSearchParams();
+  const nameTyped: string = name.toString();
+
   const { getUserInfo } = useContext(AuthContext);
 
   const [groupData, setGroupData] = useState<IGroup>();
@@ -31,7 +33,7 @@ const CatigoryDetailsPage = () => {
 
   useEffect(() => {
     const loadGroupData = async () => {
-      const response = await GetGroupDetails(name);
+      const response = await GetGroupDetails(nameTyped);
 
       if (response != null) {
         setGroupData(response);
@@ -39,14 +41,14 @@ const CatigoryDetailsPage = () => {
     };
 
     const loadGroupMembers = async () => {
-      const responseAll = await GetGroupMembers(name, false);
-      console.log(responseAll);
+      const responseAll = await GetGroupMembers(nameTyped, false);
+
       if (responseAll != null) {
         setGroupPeople(responseAll);
         setMemberCount(responseAll.length + memberCount);
       }
 
-      const responseStaff = await GetGroupMembers(name, true);
+      const responseStaff = await GetGroupMembers(nameTyped, true);
       if (responseStaff != null) {
         setGroupStaff(responseStaff);
         setMemberCount(responseStaff.length + memberCount);
@@ -54,7 +56,7 @@ const CatigoryDetailsPage = () => {
     };
 
     const loadProfile = async () => {
-      if (groupData === undefined) {
+      if (groupData === undefined || groupData.image === undefined) {
         return;
       }
       const cover = await Storage.get(groupData.image);
@@ -72,7 +74,7 @@ const CatigoryDetailsPage = () => {
 
     const responseOk = await AddUserToGroupView(
       user.email,
-      name,
+      nameTyped,
       false,
       false,
       true,

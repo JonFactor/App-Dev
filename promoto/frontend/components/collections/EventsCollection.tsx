@@ -33,12 +33,13 @@ const EventsCollection = ({
   useEffect(() => {
     const getEventData = async () => {
       let content;
+      let params = [];
       if (isOnlyDisliked) {
-        content = await EventsGetAll(true, false, false, false);
+        params = [true, false, false, false];
       } else if (isOnlyLiked) {
-        content = await EventsGetAll(false, true, false, true);
+        params = [false, true, false, true];
       } else if (excludeDisliked) {
-        content = await EventsGetAll(false, false, true, false);
+        params = [false, false, true, false];
       } else if (baisedOnGroup) {
         content = await EventsGetAll(
           false,
@@ -50,8 +51,9 @@ const EventsCollection = ({
           return response;
         });
       } else {
-        content = await EventsGetAll();
+        params = [];
       }
+      content = await EventsGetAll(...params);
       setEventData(content);
     };
 
