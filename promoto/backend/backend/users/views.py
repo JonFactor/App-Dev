@@ -32,7 +32,7 @@ class SetProfileView(APIView):
 class LoginViaCookiesView(APIView):
     def post(self, request):
         
-        token = request.data['jwt'].split(";")[0]
+        token = request.data['jwt']
         response = Response()
         response.set_cookie(key="jwt", value=token, httponly=True)
 

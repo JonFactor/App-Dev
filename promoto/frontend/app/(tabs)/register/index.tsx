@@ -101,13 +101,12 @@ const register = () => {
       last
     );
 
-    console.log(responseOk);
     if (!responseOk) {
       setNameErr("Server request failed, please try again.");
       return;
     }
 
-    router.push("/login");
+    router.back();
   };
   return (
     <View className=" p-10">
