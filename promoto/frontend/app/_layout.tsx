@@ -6,7 +6,6 @@ const StackLayout = () => {
     <AuthProvider>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="index" />
       </Stack>
     </AuthProvider>
   );
