@@ -5,6 +5,8 @@ import { AuthContext } from "../../context/AuthContext";
 import { UserViaId } from "../../functions/Auth";
 import { Storage } from "aws-amplify";
 
+import useSWR from "swr";
+
 const ProfilePictureCard = ({ width, userid = null, passedPic = null }) => {
   const { getUserProfilePhoto, isLoading } = useContext(AuthContext);
   const [userProfilePic, setUserProfilePic] = useState(null);

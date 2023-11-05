@@ -4,6 +4,7 @@ import {
   ActivityIndicator,
   ScrollView,
   Touchable,
+  TouchableHighlight,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
@@ -89,17 +90,20 @@ const eventDetailsPage = () => {
           ></ActivityIndicator>
         </View>
       ) : (
-        <View className="py-12">
-          <TouchableOpacity
-            className=" ml-8 mt-1 w-12 h-6 "
-            onPress={() => {
-              router.back();
-            }}
-          >
-            <Text className=" text-red-400 text-2xl">exit</Text>
-          </TouchableOpacity>
-          <View className=" w-full flex items-center absolute mt-14">
-            <Text className=" text-3xl font-semibold ">{eventData.title}</Text>
+        <View className="py-12 relative">
+          <View className=" flex-row w-full">
+            <TouchableOpacity
+              className=" ml-8 mt-1 w-12 h-6  relative"
+              onPress={() => {
+                router.back();
+              }}
+            >
+              <Text className=" text-red-400 text-2xl">exit</Text>
+            </TouchableOpacity>
+            <View className=" w-1/5 h-1 " />
+            <Text className=" text-3xl font-semibold mt-2">
+              {eventData.title}
+            </Text>
           </View>
           <View className=" w-screen items-center flex mt-6">
             <View className="flex  w-11/12 h-64 bg-gray-300 rounded-2xl">

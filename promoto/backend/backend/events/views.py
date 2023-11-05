@@ -15,7 +15,10 @@ from users.serializers import UserSerializer
 # Create your views here.
 
 def getUser(request):
+    
     token = request.COOKIES.get('jwt')
+    
+    
 
     if not token:
         raise AuthenticationFailed('Unauthenticated')
@@ -135,21 +138,24 @@ class EventUserAssignmentView(APIView):
             
 class UserPreferenceSetView(APIView): # credentails, isLiked, isDisliked, eventTitle
     def post(self, request):
-        userId = getUser(request).id
-        user = User.objects.filter(id=userId).first()
+        # userId = getUser(request).id
+        # user = User.objects.filter(id=userId).first()
         
-        eventTitle = request.data.get('eventTitle')
-        request.data.pop('eventTitle')
-        event = Event.objects.filter(title=eventTitle).first()
+        # eventTitle = request.data.get('eventTitle')
+        # request.data.pop('eventTitle')
+        # event = Event.objects.filter(title=eventTitle).first()
         
-        request.data.update({'user': user.id})
-        request.data.update({'event': event.id})
+        # request.data.update({'user': user.id})
+        # request.data.update({'event': event.id})
         
-        serializer = UserEventPreferencesSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+        # serializer = UserEventPreferencesSerializer(data=request.data)
+        # serializer.is_valid(raise_exception=True)
+        # serializer.save()
         
-        return Response(serializer.data)
+        token = request.COOKIES.get('jwt').split("=")[1].split(";")[0]
+        print(token)
+        
+        return Response()#serializer.data)
     
 class GetMembersFromEvent(APIView):
     def post(self, request):

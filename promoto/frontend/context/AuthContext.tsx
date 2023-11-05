@@ -10,6 +10,8 @@ import {
 import { Storage } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
 
+import useSWR from "swr";
+
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
@@ -117,8 +119,8 @@ export const AuthProvider = ({ children }) => {
 
     const photo: string = await Storage.get(userPhotoUri);
 
-    setUserProfilePic(photo);
     setIsLoading(false);
+    setUserProfilePic(photo);
     return photo;
   };
 

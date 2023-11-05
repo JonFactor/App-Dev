@@ -2,6 +2,8 @@ import axios from "axios";
 
 const api = axios.create({
   baseURL: `${process.env.EXPO_PUBLIC_BACKEND_URL}/api`,
+  headers: { "Content-Type": "application/json" },
+  withCredentials: true,
 });
 
 export interface IUser {
@@ -59,6 +61,8 @@ export const UserLoginViaCookies = async (jwt: string): Promise<boolean> => {
   if (jwt === null) {
     return false;
   }
+
+  console.log(jwt);
 
   const response = api.post("cookieLogin", { jwt });
   return (await response).status === 200;

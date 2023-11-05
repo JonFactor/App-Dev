@@ -4,6 +4,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { router } from "expo-router";
 import { Image } from "expo-image";
 import { Storage } from "aws-amplify";
+import { LinearGradient } from "expo-linear-gradient";
 
 const GroupCard = ({ item, routingIgnore }) => {
   const [image, setImage] = useState(null);
@@ -33,17 +34,22 @@ const GroupCard = ({ item, routingIgnore }) => {
       onPress={handleGroupSelect}
     >
       <View className=" flex w-full h-full">
-        <Image
-          className=" flex-1 rounded-2xl items-center"
-          contentFit="cover"
-          source={image}
+        <LinearGradient
+          className=" flex w-full h-full rounded-t-xl"
+          colors={["rgba(0,0,0,.15)", "transparent"]}
         >
-          <View className=" bg-white rounded-bl-2xl rounded-br-2xl w-full h-12 border-black mt-28 flex items-center ">
-            <Text className="  text-md-purple text-xl font-semibold">
-              {item.title}
-            </Text>
-          </View>
-        </Image>
+          <Image
+            className=" flex-1 rounded-2xl items-center"
+            contentFit="cover"
+            source={image}
+          >
+            <View className=" bg-white rounded-bl-2xl rounded-br-2xl w-full h-12 border-black mt-28 flex items-center ">
+              <Text className="  text-md-purple text-xl font-semibold">
+                {item.title}
+              </Text>
+            </View>
+          </Image>
+        </LinearGradient>
       </View>
     </TouchableOpacity>
   );
