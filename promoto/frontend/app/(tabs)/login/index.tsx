@@ -54,6 +54,7 @@ const LoginPage = () => {
 
   const handleSignInclick = async () => {
     const isValid = validateUserEntry();
+    console.log(isValid);
     if (!isValid) {
       await loginViaCookies(null, true);
       const responseOk = await getUserInfo();

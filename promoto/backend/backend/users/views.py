@@ -9,6 +9,24 @@ import datetime
 # Create your views here.
 
 
+def getUser(request):
+    
+    if type(request) == str:    
+        return None
+    token = request.COOKIES.get('jwt').split("=")[1].split(";")[0]
+    print("TOKEN: " + token)
+
+    if not token:
+        raise AuthenticationFailed('Unauthenticated')
+
+    try:
+        payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+    except jwt.ExpiredSignatureError:
+        raise AuthenticationFailed('jwt expired signature')
+
+    return User.objects.filter(id=payload['id']).first()
+
+
 class RegisterView(APIView):
     def post(self, request):
         
@@ -85,20 +103,11 @@ class LoginView(APIView):
 
 class UserView(APIView):
     def get(self, request):
-        token = request.COOKIES.get('jwt')
-
-        if not token:
-            raise AuthenticationFailed('Unauthenticated')
-
-        try:
-            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('jwt expired signature')
-        user = User.objects.filter(id=payload['id']).first()
+        print("1")
+        user = getUser("2")
         serializer = UserSerializer(user)
 
         return Response(serializer.data)
-
 
 class LogoutView(APIView):
     def post(self, request):

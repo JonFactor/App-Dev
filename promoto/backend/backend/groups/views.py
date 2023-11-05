@@ -16,8 +16,11 @@ from django.db.models import Q
 
 # Create your views here.
 
+
 def getUser(request):
-    token = request.COOKIES.get('jwt')
+    
+    token = request.COOKIES.get('jwt').split("=")[1].split(";")[0]
+    print("TOKEN: " + token)
 
     if not token:
         raise AuthenticationFailed('Unauthenticated')
@@ -28,6 +31,7 @@ def getUser(request):
         raise AuthenticationFailed('jwt expired signature')
 
     return User.objects.filter(id=payload['id']).first()
+
 
 class AddEventToGroupView(APIView):
     def post(self, request):

@@ -16,9 +16,8 @@ from users.serializers import UserSerializer
 
 def getUser(request):
     
-    token = request.COOKIES.get('jwt')
-    
-    
+    token = request.COOKIES.get('jwt').split("=")[1].split(";")[0]
+    print("TOKEN: " + token)
 
     if not token:
         raise AuthenticationFailed('Unauthenticated')
@@ -61,6 +60,7 @@ class EventSingularGetViaIdView(APIView):
 
 class EventCollectionView(APIView):
     def post(self, request): # credentails
+        print("testing \n \n \n llll")
         user = getUser(request)
         filterEvents = None
         
