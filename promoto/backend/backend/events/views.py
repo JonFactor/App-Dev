@@ -2,33 +2,20 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
+import jwt
+from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
+
 from .serializers import EventSerializer, User2EventSerialzier, UserEventPreferencesSerializer
 from .models import Event, UserEventPreferences, User2Event
 from users.models import User
 from groups.models import Group, Event2Group
 from groups.serializers import GroupSerializer, Event2GroupSerializer
-import jwt
-from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Q
 from users.serializers import UserSerializer
+from functions.getUser import getUser
+
 
 # Create your views here.
-
-def getUser(request):
-    
-    token = request.COOKIES.get('jwt').split("=")[1].split(";")[0]
-    print("TOKEN: " + token)
-
-    if not token:
-        raise AuthenticationFailed('Unauthenticated')
-
-    try:
-        payload = jwt.decode(token, 'secret', algorithms=['HS256'])
-    except jwt.ExpiredSignatureError:
-        raise AuthenticationFailed('jwt expired signature')
-
-    return User.objects.filter(id=payload['id']).first()
-
 
 class EventCreationView(APIView):
     def post(self, request):
@@ -60,7 +47,6 @@ class EventSingularGetViaIdView(APIView):
 
 class EventCollectionView(APIView):
     def post(self, request): # credentails
-        print("testing \n \n \n llll")
         user = getUser(request)
         filterEvents = None
         

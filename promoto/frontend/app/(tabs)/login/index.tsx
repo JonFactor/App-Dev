@@ -54,9 +54,10 @@ const LoginPage = () => {
 
   const handleSignInclick = async () => {
     const isValid = validateUserEntry();
-    console.log(isValid);
     if (!isValid) {
-      await loginViaCookies(null, true);
+      await loginViaCookies(null, true).then(
+        async (response) => await getUserInfo()
+      );
       const responseOk = await getUserInfo();
       if (responseOk) {
         router.back();
