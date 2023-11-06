@@ -18,6 +18,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userToken, setUserToken] = useState(null);
   const [userProfilePic, setUserProfilePic] = useState(null);
+  const [stopLoading, setStopLoading] = useState(false);
 
   const loginViaCredentials = async (
     email: string,
@@ -70,11 +71,10 @@ export const AuthProvider = ({ children }) => {
   const isLoggedIn = async (): Promise<boolean> => {
     setIsLoading(true);
     let userToken = await AsyncStorage.getItem("userToken");
-    await UserLoginViaCookies(userToken);
-    const isLoggedIn = await UserGetDetails();
+    const loginOk = await UserLoginViaCookies(userToken);
 
     let success = false;
-    if (isLoggedIn !== null) {
+    if (loginOk) {
       success = true;
       setUserToken(userToken);
     }
@@ -171,6 +171,10 @@ export const AuthProvider = ({ children }) => {
   };
 
   const getUserInfo = async (): Promise<IUser> => {
+    if (stopLoading) {
+      console.log("1234");
+      return null;
+    }
     setIsLoading(true);
     const response = await UserGetDetails();
     setIsLoading(false);
@@ -193,6 +197,7 @@ export const AuthProvider = ({ children }) => {
         setUserProfilePhoto,
         isLoggedIn,
         setIsLoading,
+        setStopLoading,
       }}
     >
       {children}

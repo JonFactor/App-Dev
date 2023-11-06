@@ -64,13 +64,6 @@ export default () => {
           href: null,
         }}
       />
-      <Tabs.Screen
-        name="accountRecovery"
-        options={{
-          tabBarStyle: { display: "none" },
-          href: null,
-        }}
-      />
     </Tabs>
   );
 };

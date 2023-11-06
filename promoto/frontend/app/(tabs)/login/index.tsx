@@ -1,4 +1,4 @@
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet, Modal } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { Input } from "react-native-elements";
 import LoginForm from "../../../components/forms/LoginForm";
@@ -7,6 +7,7 @@ import { useFonts } from "expo-font";
 import { Image } from "expo-image";
 import { AuthContext } from "../../../context/AuthContext";
 import router from "../../../common/routerHook";
+import AccountRecovery from "../../../components/modals/AccountRecovery";
 
 const LoginPage = () => {
   const { loginViaCookies, loginViaCredentials, getUserInfo } =
@@ -17,6 +18,7 @@ const LoginPage = () => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [passwordAttempts, setPasswordAttempts] = useState(0);
+  const [passwordResetModal, setPasswordResetModal] = useState(false);
 
   const validateUserEntry = () => {
     let emailErrored = true;
@@ -87,11 +89,14 @@ const LoginPage = () => {
   };
 
   const handleForgotPasswordClick = () => {
-    router.replace("/accountRecovery");
+    setPasswordResetModal(true);
   };
 
   return (
     <View className="mt-20">
+      <Modal visible={passwordResetModal}>
+        <AccountRecovery parentSetter={setPasswordResetModal} />
+      </Modal>
       <View className=" p-4 ">
         <View className="flex items-center w-full mt-10">
           <Text className=" text-light-blue text-4xl font-semibold ">

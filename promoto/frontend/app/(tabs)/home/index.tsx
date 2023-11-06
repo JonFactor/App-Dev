@@ -36,26 +36,28 @@ const home = () => {
   const [displayCreationModal, setDisplayCreationModal] = useState(false);
   const [userData, setUserData] = useState(null);
   const [currentFilter, setCurrentFilter] = useState([]);
-  const { login, getUserInfo } = useContext(AuthContext);
+  const [gotoLogin, setGotoLogin] = useState(false);
+
+  const { login, getUserInfo, setStopLoading } = useContext(AuthContext);
 
   useEffect(() => {
     const setUser = async () => {
-      const userData = await getUserInfo(); // .then((response) => {
-      setUserData(userData);
+      const userD = await getUserInfo(); // .then((response) => {
+      setUserData(userD);
+      if (userD === null) {
+        setGotoLogin(true);
+      }
+      setStopLoading(true);
     };
+
     setUser();
   }, []);
 
-  let notFirst = 0;
   useEffect(() => {
-    // if (userData === null && notFirst != 0) {
-    //   router.replace("/login/");
-    // }
-    if (notFirst === 1 && userData === null) {
-      router.replace("/login/");
+    if (gotoLogin) {
+      router.replace("/login");
     }
-    notFirst += 1;
-  }, [userData]);
+  }, [gotoLogin]);
 
   const handleFilterBtnPress = (index: number) => {
     if (!currentFilter.includes(groupTypes[index])) {
