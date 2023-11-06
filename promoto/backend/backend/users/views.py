@@ -86,6 +86,8 @@ class LoginView(APIView):
 class UserView(APIView):
     def get(self, request):
         user = getUser(request)
+        if user == None:
+            return Response(status=400)
         serializer = UserSerializer(user)
 
         return Response(serializer.data)

@@ -27,15 +27,16 @@ export const AuthProvider = ({ children }) => {
   };
 
   const loginViaCookies = async (
-    userToken: string = null,
+    userTok: string = null,
     sendToBackend: boolean = true
   ): Promise<boolean> => {
     setIsLoading(true);
-    if (userToken === null) {
-      userToken = await AsyncStorage.getItem("userToken");
+    if (userTok === null) {
+      userTok = await AsyncStorage.getItem("userToken");
     }
-    setUserToken(userToken);
-    AsyncStorage.setItem("userToken", userToken);
+    setUserToken(userTok);
+
+    AsyncStorage.setItem("userToken", userTok);
 
     if (sendToBackend) {
       const cookieResponse = await UserLoginViaCookies(userToken);

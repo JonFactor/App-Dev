@@ -75,7 +75,8 @@ const LoginPage = () => {
       return;
     }
 
-    const cookie = response["jwt"];
+    const cookie = response["data"]["jwt"];
+
     loginViaCookies(cookie);
 
     router.back();
@@ -83,6 +84,10 @@ const LoginPage = () => {
 
   const handleSignUpClick = () => {
     router.replace("/register");
+  };
+
+  const handleForgotPasswordClick = () => {
+    router.replace("/accountRecovery");
   };
 
   return (
@@ -155,7 +160,10 @@ const LoginPage = () => {
           </View>
           <View className=" w-full h-1 bg-md-blue" />
           <View className=" items-end w-full">
-            <TouchableOpacity className=" mt-1">
+            <TouchableOpacity
+              className=" mt-1"
+              onPress={handleForgotPasswordClick}
+            >
               <Text className=" text-gray-400">Forgot your password?</Text>
             </TouchableOpacity>
           </View>

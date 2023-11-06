@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Event, User2Event
+from .models import Event, User2Event, UserEventPreferences
 
 
 class EventSerializer(serializers.ModelSerializer):

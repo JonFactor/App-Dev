@@ -41,15 +41,21 @@ const home = () => {
   useEffect(() => {
     const setUser = async () => {
       const userData = await getUserInfo(); // .then((response) => {
-      //   if (userData === undefined) {
-      //     router.replace("login");
-      //   }
-      //   return response;
-      // });
       setUserData(userData);
     };
     setUser();
   }, []);
+
+  let notFirst = 0;
+  useEffect(() => {
+    // if (userData === null && notFirst != 0) {
+    //   router.replace("/login/");
+    // }
+    if (notFirst === 1 && userData === null) {
+      router.replace("/login/");
+    }
+    notFirst += 1;
+  }, [userData]);
 
   const handleFilterBtnPress = (index: number) => {
     if (!currentFilter.includes(groupTypes[index])) {
@@ -80,7 +86,7 @@ const home = () => {
               Hi{" "}
               {userData !== undefined && userData !== null
                 ? userData.name
-                : "ERROR"}
+                : "loading..."}
               ,
             </Text>
             <View className=" flex-row space-x-2">

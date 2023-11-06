@@ -19,7 +19,10 @@ from functions.getUser import getUser
 
 class EventCreationView(APIView):
     def post(self, request):
-        userId = getUser(request).id
+        user = getUser(request)
+        if user == None:
+            return Response(status=400)
+        userId = user.id
         request.data.update({"owner":userId})   
         
         eventGroupName = request.data.get('eventGroup')
@@ -48,6 +51,8 @@ class EventSingularGetViaIdView(APIView):
 class EventCollectionView(APIView):
     def post(self, request): # credentails
         user = getUser(request)
+        if user == None:
+            return Response(status=400)
         filterEvents = None
         
         if request.data.get('isBaisedOnGroup'):
@@ -102,7 +107,10 @@ class EventUserAssignmentView(APIView):
         if request.data['viaEmail'] == True:
             userId = User.objects.filter(email=request.data['email']).first().id
         else:
-            userId = getUser(request).id
+            user = getUser(request)
+            if user == None:
+                return Response(status=400)
+            userId = user.id
             
         event = Event.objects.filter(title = request.data["eventTitle"]).first()
         if event == None:
@@ -124,19 +132,22 @@ class EventUserAssignmentView(APIView):
             
 class UserPreferenceSetView(APIView): # credentails, isLiked, isDisliked, eventTitle
     def post(self, request):
-        # userId = getUser(request).id
-        # user = User.objects.filter(id=userId).first()
+        user = getUser(request)
+        if user == None:
+            return Response(status=400)
+        userId = user.id
+        user = User.objects.filter(id=userId).first()
         
-        # eventTitle = request.data.get('eventTitle')
-        # request.data.pop('eventTitle')
-        # event = Event.objects.filter(title=eventTitle).first()
+        eventTitle = request.data.get('eventTitle')
+        request.data.pop('eventTitle')
+        event = Event.objects.filter(title=eventTitle).first()
         
-        # request.data.update({'user': user.id})
-        # request.data.update({'event': event.id})
+        request.data.update({'user': user.id})
+        request.data.update({'event': event.id})
         
-        # serializer = UserEventPreferencesSerializer(data=request.data)
-        # serializer.is_valid(raise_exception=True)
-        # serializer.save()
+        serializer = UserEventPreferencesSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         
         token = request.COOKIES.get('jwt').split("=")[1].split(";")[0]
         print(token)

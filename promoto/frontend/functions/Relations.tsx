@@ -16,30 +16,15 @@ export const FindFollowing = async (
   checkFollow: boolean = true,
   checkBlocked: boolean = false
 ): Promise<Array<IUserToUser>> => {
-  return await fetch(
-    `${process.env.EXPO_PUBLIC_BACKEND_URL}/api/viewRelationships`,
-    {
-      method: "POST",
-      body: JSON.stringify({ userEmail, checkFollow, checkBlocked }),
-      headers: { "Content-Type": "application/json" },
-    }
-  ).then(async (response) => {
-    if (response.ok) {
-      return await response.json();
-    } else {
-      console.log(response.status);
-      return null;
-    }
+  const response = api.post("/viewRelationships", {
+    userEmail,
+    checkFollow,
+    checkBlocked,
   });
+  return (await response).data;
 };
 
 export const CreateFollowing = async (): Promise<boolean> => {
-  return await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/`, {}).then(
-    (response) => {
-      if (response.ok) {
-        return true;
-      }
-      return false;
-    }
-  );
+  const response = api.post("/", {});
+  return (await response).status === 200;
 };
